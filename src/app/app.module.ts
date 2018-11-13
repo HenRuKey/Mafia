@@ -5,10 +5,14 @@ import { WebsocketserverService } from './websocketserver.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { RoomManagerComponent } from './room-manager/room-manager.component';
+import { LobbyComponent } from './lobby/lobby.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    RoomManagerComponent,
+    LobbyComponent
   ],
   imports: [
     BrowserModule,
