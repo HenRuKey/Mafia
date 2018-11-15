@@ -1,3 +1,8 @@
 .room-code-entry {
     visibility: hidden;
 }
+
+.error {
+    color: red;
+    visibility: hidden;
+}
