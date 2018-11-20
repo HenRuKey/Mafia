@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mafia</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+  <h1>Server Index</h1>
+  
+<button id="create_room" class="col-md-12">Create Room</button>
+<button id="join_room" class="col-md-12">Join Room</button>
+<input type="text" id="room_code"/>
+<label id="code">Test</label>
+
+</div>
+</body>
+    <script src = "/socket.io/socket.io.js"></script>
+   
+    <script>
+      $(function(){
+        var socket = io();
+        var $code = $('#room_code');
+        var $createRoom = $('#create_room');
+        var $joinRoom = $('#join_room');
+        var $code = $('#lblCode');
+
+
+        $createRoom.click(function(e){
+          e.preventDefault();
+          console.log('Client Event')
+          socket.emit("Create Room")
+        });
+
+
+
+        socket.on("Send Code", function(data){
+          console.log(data.code)
+          $code.text('')
+          $code.append(data.code)
+
+        });
+
+      });
+
+
+    </script>
+</html>

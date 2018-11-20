@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {HttpClientModule, HttpClient} from '@angular/common/http';
 import * as $ from 'jquery';
 
 @Component({
@@ -6,8 +7,11 @@ import * as $ from 'jquery';
   templateUrl: './room-manager.component.html',
   styleUrls: ['./room-manager.component.css']
 })
-export class RoomManagerComponent implements OnInit {
 
+
+export class RoomManagerComponent implements OnInit {
+  
+  private http: HttpClient;
   constructor() { }
 
   ngOnInit() {
@@ -16,8 +20,13 @@ export class RoomManagerComponent implements OnInit {
   /**
    * Initializes a room with a unique four-letter key.
    */
-  createRoom() {
-
+  createRoom($scope,  $http) {
+    $scope.test = function(){
+      $http.get('/test').success(function(){
+        console.log('Success');
+      });
+    }
+    return false;
   }
 
   /**
