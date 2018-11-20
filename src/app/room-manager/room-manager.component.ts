@@ -27,4 +27,28 @@ export class RoomManagerComponent implements OnInit {
     $("#room_entry").css("visibility", "visible");
   }
 
+  /**
+   * Attempts to join a specified room.
+   * @param roomCode  the room to join
+   */
+  joinRoom(roomCode : string) {
+    if (this.isValidRoomCode(roomCode)) {
+
+    }
+    else {
+      $(".error").css("visibility", "visible");
+    }
+    return false;
+  }
+
+  /**
+   * Validates a roomcode.
+   * @param roomCode  the room code to validate
+   * @returns         true if the code is valid
+   */
+  isValidRoomCode(roomCode : string) : boolean {
+    roomCode = roomCode.toUpperCase();
+    return roomCode.length == 4;
+  }
+
 }

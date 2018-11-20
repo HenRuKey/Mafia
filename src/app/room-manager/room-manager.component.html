@@ -1,5 +1,9 @@
 <button (click)="createRoom()" class="col-md-4">Create Room</button>
 <button (click)="showRoomCodePrompt()" class="col-md-4">Join Existing Room</button>
 <div class="room-code-entry col-md-6" id="room_entry">
-    <input/>
+    <form (submit)="joinRoom(roomCode.value)">
+        <input type="text" #roomCode/>
+        <input type="submit" value="Join Room"/>
+        <label class="error">Invalid room code.</label>
+    </form>
 </div>
