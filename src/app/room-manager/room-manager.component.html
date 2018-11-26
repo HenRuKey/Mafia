@@ -1,10 +1,4 @@
-
-
-<input type="button" value="Create Room" ng-click="createRoom()">
-
-<button (click)="createRoom()" class="col-md-12">Create Room</button>
-<button (click)="showRoomCodePrompt()" class="col-md-4">Join Existing Room</button>
-
+<button (click)="showRoomCodePrompt()">Enter Room</button>
 <div class="room-code-entry col-md-6" id="room_entry">
     <form (submit)="joinRoom(roomCode.value)">
         <input type="text" #roomCode/>
@@ -12,8 +6,6 @@
         <label class="error">Invalid room code.</label>
     </form>
 </div>
-
-<script>
-    var path = 
-    document.write("<script type='text/javascript' src="+ path + "><\/script>");
-</script>    
+<ul>
+    <li *ngFor='let test of tests'></li>
+</ul>
