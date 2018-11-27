@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message Box Demo</title>
+    <style>
+      .message-box {
+        border: 1px solid black;
+        padding: 5px;
+        overflow: auto;
+        height: 200px;
+        width: 200px;
+        /*change the dimensions once this isn't a demo*/
+      }
+      
+      .message {
+        font-family: monospace;
+      }
+    </style>
+</head>
+<body>
+    <div class="message-box">
+      <p class="message">
+        This is a message!
+      </p>
+      <p class="message">
+        This is another message!
+      </p>
+      <p class="message">
+        This is a third message!
+      </p>
+      <p class="message">
+        This is a long message meant to test overflowing text content. Ideally, this would wrap around,
+        while text that extends below the bottom of the message box will add a scrollbar.
+      </p>
+    </div>
+    <script>
+      var messages = document.getElementsByClassName("message");
+      for (var i = 0; i < messages.length; i++) {
+        messages[i].style.color = `hsl(${Math.random()*360}, 100%, 40%)`;
+      }
+    </script>
+</body>
+</html>
