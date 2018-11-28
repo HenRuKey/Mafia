@@ -49,7 +49,7 @@ export class RoomManagerComponent implements OnInit {
    * Gives an additional prompt for a user to enter the room code.
    */
   showRoomCodePrompt() {
-    $("#room_entry").css("visibility", "visible");
+    $("#room_entry").fadeIn(1000);
   }
 
   /**

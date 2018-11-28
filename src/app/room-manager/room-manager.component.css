@@ -1,15 +1,11 @@
 .button {
-    background: #990032;
-    border-radius: 12px;
+    border: solid #F2F2F2;
     text-align: center;
     color: #F2F2F2 !important;
     text-decoration: none;
     font-size: 2rem;
-    margin: 0 auto;
-    display: block;
     width: 50%;
-    position: relative;
-    top: 50%;
+    padding: 20px;
 }
 
 .button:hover {
@@ -37,12 +33,30 @@
     width: 75%;
 }
 
+.right .button {
+    width: 100% !important;
+    position: relative;
+}
+
+.right-wrapper {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
 .rm-section {
     position: absolute;
     height: 100%;
     width: 50%;
     overflow: hidden;
     transition: 1000ms all ease-in-out;
+    /* Vertically centers items*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .rm-section.left {
@@ -56,7 +70,33 @@
 }
 
 .room-code-entry {
-    visibility: hidden;
+    display: none;
+    margin-top: 50px;
+    padding-top: 20px;
+}
+
+.room-code-entry input {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-code-entry input[type="text"] {
+    background: rgba(0,0,0,0.5);
+    border: solid #F2F2F2;
+    color: #F2F2F2;
+    position: relative;
+    margin: 25px auto;
+    text-align: center;
+}
+
+.room-code-entry input[type="submit"] {
+    color: #F2F2F2;
+    border: solid #F2F2F2;
+    background: none;
+    position: relative;
+    margin: 25px auto;
+    width: 25%;
 }
 
 .room-manager {

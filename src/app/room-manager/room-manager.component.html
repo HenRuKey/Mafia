@@ -3,16 +3,15 @@
         <a class="button" (click)="createRoom()">Create Room</a>   
     </div>
     <div class="rm-section right" id="right">
-        <a class="button" (click)="showRoomCodePrompt()">Join Room</a>
-        <div class="room-code-entry col-md-6" id="room_entry">
-            <form (submit)="joinRoom(roomCode.value)">
-                <input type="text" #roomCode/>
-                <input type="submit" value="Join"/>
-                <label class="error">Invalid room code.</label>
-            </form>
+        <div class="right-wrapper">
+            <a class="button" (click)="showRoomCodePrompt()">Join Room</a>
+            <div class="room-code-entry" id="room_entry">
+                <form (submit)="joinRoom(roomCode.value)">
+                    <input type="text" #roomCode/>
+                    <input type="submit" value="Join"/>
+                    <label class="error">Invalid room code.</label>
+                </form>
+            </div>
         </div>
-        <ul>
-            <li *ngFor='let test of tests'></li>
-        </ul>
     </div>
 </div>
