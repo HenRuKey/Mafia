@@ -11,11 +11,7 @@
                 <label class="error">Invalid room code.</label>
             </form>
         </div>
-        <ul>
-            <li *ngFor='let test of tests'></li>
-        </ul>
     </div>
 </div>
-<!-- Everything else on this page can be trashed, it is just for testing purposes, 
-    but this line below needs to exist in the actual 'room' page, wherever that ends up being. (Lobby?) -->>
+<!--TODO This line below needs to exist in the actual 'room' page, wherever that ends up being. (Lobby?) -->>
 <div (window:unload)="beforeExit()"></div>
