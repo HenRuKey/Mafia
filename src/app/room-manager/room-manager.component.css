@@ -1,8 +1,70 @@
-.room-code-entry {
-    visibility: hidden;
+.button {
+    background: #990032;
+    border-radius: 12px;
+    text-align: center;
+    color: #F2F2F2 !important;
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0 auto;
+    display: block;
+    width: 50%;
+    position: relative;
+    top: 50%;
+}
+
+.button:hover {
+    cursor: pointer;
 }
 
 .error {
     color: red;
     visibility: hidden;
+}
+
+.hover-left.left {
+    width: 75%;
+}
+
+.hover-left.right {
+    width: 25%;
+}
+
+.hover-right.left {
+    width: 25%;
+}
+
+.hover-right.right {
+    width: 75%;
+}
+
+.rm-section {
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    overflow: hidden;
+    transition: 1000ms all ease-in-out;
+}
+
+.rm-section.left {
+    left: 0;
+    background: rgba(0,0,30,0.4);
+}
+
+.rm-section.right {
+    right: 0;
+    background: rgba(30,0,0,0.4);
+}
+
+.room-code-entry {
+    visibility: hidden;
+}
+
+.room-manager {
+    font-family: 'Crimson Text', serif;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: url(../../assets/images/alley.jpg) center center no-repeat;
+    background-size: cover;
 }

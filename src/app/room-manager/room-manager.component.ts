@@ -14,16 +14,34 @@ export class RoomManagerComponent implements OnInit {
 
   tests = [];
   constructor(private service: MafiaDbService) {
-    this.tests = service.CheckRoomByID('ROOM')
-   }
+    this.tests = service.checkRoomByID('ROOM');
+  }
 
   ngOnInit() {
+    // Visual events
+    $("#left").mouseenter(function() {    // Mouse enters left side
+      $(this).addClass("hover-left");
+      $("#right").addClass("hover-left");
+    });
+    $("#left").mouseleave(function() {    // Mouse leaves left side
+      $(this).removeClass("hover-left");
+      $("#right").removeClass("hover-left");
+    });
+    $("#right").mouseenter(function() {    // Mouse enters right side
+      $(this).addClass("hover-right");
+      $("#left").addClass("hover-right");
+    });
+    $("#right").mouseleave(function() {    // Mouse leaves right side
+      $(this).removeClass("hover-right");
+      $("#left").removeClass("hover-right");
+    });
+
   }
 
   /**
    * Initializes a room with a unique four-letter key.
    */
-  createRoom($scope, $http) {
+  createRoom() {
     return false;
   }
 
@@ -40,7 +58,7 @@ export class RoomManagerComponent implements OnInit {
    */
   joinRoom(roomCode: string) {
     if (this.isValidRoomCode(roomCode)) {
-      this.service.CheckRoomByID(roomCode)
+      this.service.checkRoomByID(roomCode)
       $(".error").css("visibility", "hidden");
     }
     else {

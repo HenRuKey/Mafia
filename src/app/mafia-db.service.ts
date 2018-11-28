@@ -9,7 +9,7 @@ export class MafiaDbService {
   test = [];
   constructor(private http: HttpClient) { }
 
-  CheckRoomByID(id) {
+  checkRoomByID(id) {
     this.http.get<any>('http://localhost:3000/api/' + id, id).subscribe(result => {
       console.log(result);
     })

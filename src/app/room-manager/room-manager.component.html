@@ -1,11 +1,18 @@
-<button (click)="showRoomCodePrompt()">Enter Room</button>
-<div class="room-code-entry col-md-6" id="room_entry">
-    <form (submit)="joinRoom(roomCode.value)">
-        <input type="text" #roomCode/>
-        <input type="submit" value="Join Room"/>
-        <label class="error">Invalid room code.</label>
-    </form>
+<div class="room-manager">
+    <div class="rm-section left" id="left">
+        <a class="button" (click)="createRoom()">Create Room</a>   
+    </div>
+    <div class="rm-section right" id="right">
+        <a class="button" (click)="showRoomCodePrompt()">Join Room</a>
+        <div class="room-code-entry col-md-6" id="room_entry">
+            <form (submit)="joinRoom(roomCode.value)">
+                <input type="text" #roomCode/>
+                <input type="submit" value="Join"/>
+                <label class="error">Invalid room code.</label>
+            </form>
+        </div>
+        <ul>
+            <li *ngFor='let test of tests'></li>
+        </ul>
+    </div>
 </div>
-<ul>
-    <li *ngFor='let test of tests'></li>
-</ul>
