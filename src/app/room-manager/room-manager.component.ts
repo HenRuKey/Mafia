@@ -54,11 +54,7 @@ export class RoomManagerComponent implements OnInit {
     this.service.CheckRoomByID(code, result => {
       if (result == null) {
         this.service.CreateRoom(code, succeed => {
-          
-
-          //TODO: Redirect to proper room, passing along room code
           this.router.navigate(['/room', code]);
-
           this.room = code;
           console.log(succeed)
         },
@@ -92,11 +88,8 @@ export class RoomManagerComponent implements OnInit {
       this.service.CheckRoomByID(roomCode, result => {
         if (result != null) {
           this.service.UpdateRoom(roomCode, 1, result => {
-
-            //TODO: Redirect to proper room, passing along the room code
             this.room = roomCode;
             this.router.navigate(['/room', this.room]);
-
           })
         } else {
           $(".error").text("Room Doesn't Exist")
