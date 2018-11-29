@@ -1,0 +1,13 @@
+.message-box {
+  border: 1px solid black;
+  padding: 5px;
+  overflow: auto;
+  font-family: monospace;
+  
+  /*
+    Feel free to change these dimensions. I chose them for testing purposes, not aesthetic ones.
+    --Michael
+  */
+  height: 200px;
+  width: 200px;
+}
