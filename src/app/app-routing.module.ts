@@ -5,7 +5,7 @@ import { LobbyComponent } from './lobby/lobby.component';
 
 const routes: Routes = [
   { path: 'room/:roomCode', component: LobbyComponent },
-  { path: '', component: RoomManagerComponent, }
+  { path: '', component: RoomManagerComponent }
 ];
 
 @NgModule({
