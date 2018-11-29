@@ -7,9 +7,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LobbyComponent implements OnInit {
 
-  constructor() { }
+  private roomCode : string;
+  private players : string[]; // TODO: Create player class to store name and info in.
+
+  /**
+   * A lobby to identify present players and begin the game.
+   */
+  constructor(roomCode : string) {
+    this.roomCode = roomCode; 
+    this.players = ["One", "Two", "Three", "Four"]; // TODO: Pull names of players from database.
+  }
 
   ngOnInit() {
+
   }
 
 }
