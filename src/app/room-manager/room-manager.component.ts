@@ -3,6 +3,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import * as $ from 'jquery';
 import { MafiaDbService } from '../mafia-db.service';
 import { getRandomString } from 'selenium-webdriver/safari';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-room-manager',
@@ -19,11 +20,11 @@ export class RoomManagerComponent implements OnInit {
  * Temporary test variable used for tracking the room code of a created or joined room.
  * TODO: Move this to whichever component.ts will be handling specific room logic
  */
-  room = "" 
+  private room : string;
+  private service : MafiaDbService;
 
-
-
-  constructor(private service: MafiaDbService) {
+  constructor(service : MafiaDbService) {
+    this.service = service;
   }
 
   ngOnInit() {
@@ -98,7 +99,7 @@ export class RoomManagerComponent implements OnInit {
 
             this.room = roomCode;
             console.log(result);
-
+            
           })
         } else {
           $(".error").text("Room Doesn't Exist")
