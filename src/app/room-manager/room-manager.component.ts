@@ -11,10 +11,7 @@ import { RouterLink, Router } from '@angular/router';
   styleUrls: ['./room-manager.component.css']
 })
 
-
 export class RoomManagerComponent implements OnInit {
-
-
 
 /**
  * Temporary test variable used for tracking the room code of a created or joined room.
@@ -22,9 +19,11 @@ export class RoomManagerComponent implements OnInit {
  */
   private room : string;
   private service : MafiaDbService;
+  private router : Router;
 
-  constructor(service : MafiaDbService) {
+  constructor(service : MafiaDbService, router : Router) {
     this.service = service;
+    this.router = router;
   }
 
   ngOnInit() {
@@ -45,7 +44,6 @@ export class RoomManagerComponent implements OnInit {
       $(this).removeClass("hover-right");
       $("#left").removeClass("hover-right");
     });
-
   }
 
   /**
@@ -59,7 +57,7 @@ export class RoomManagerComponent implements OnInit {
           
 
           //TODO: Redirect to proper room, passing along room code
-
+          this.router.navigate(['/room', code]);
 
           this.room = code;
           console.log(succeed)
@@ -96,10 +94,9 @@ export class RoomManagerComponent implements OnInit {
           this.service.UpdateRoom(roomCode, 1, result => {
 
             //TODO: Redirect to proper room, passing along the room code
-
             this.room = roomCode;
-            console.log(result);
-            
+            this.router.navigate(['/room', this.room]);
+
           })
         } else {
           $(".error").text("Room Doesn't Exist")
@@ -144,7 +141,6 @@ export class RoomManagerComponent implements OnInit {
     }
   }
 
-
   /**
    * Validates a roomcode.
    * @param roomCode  the room code to validate
@@ -164,7 +160,6 @@ export class RoomManagerComponent implements OnInit {
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     for (var i = 0; i < 4; i++)
       text += possible.charAt(Math.floor(Math.random() * possible.length));
-
     return text;
   };
 
