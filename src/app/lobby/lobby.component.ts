@@ -49,10 +49,13 @@ export class LobbyComponent implements OnInit {
     if (this.isValidName(name)) {
       $(".error").css("visibility", "hidden"); // Hides the error message if visible
       
+      $(".name-prompt").css("display", "none");
+      $(".lobby").css("display", "block");
     }
     else {
       $(".error").css("visibility", "visible");
     }
+    return false; 
   }
 
   /**
