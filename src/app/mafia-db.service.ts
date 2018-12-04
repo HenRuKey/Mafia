@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Options } from 'selenium-webdriver/opera';
+var serv_url = "http://localhost:3000"
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,11 @@ export class MafiaDbService {
   private res: any;
   constructor(private http: HttpClient) { }
 
-
+GetAllRooms(callback){
+  this.http.get("/api").subscribe(result => {
+    callback(result)
+  })
+}
 
   /**
    * Makes a call to the server to check the database for a specific room
@@ -17,7 +23,7 @@ export class MafiaDbService {
    * @param callback function called after completion
    */
   CheckRoomByID(roomCode, callback) {
-    this.http.get<any>('http://localhost:3000/api/' + roomCode).subscribe(result => {
+    this.http.get<any>(serv_url + '/api/room/' + roomCode).subscribe(result => {
       callback(result);
     })
     
@@ -30,7 +36,7 @@ export class MafiaDbService {
    * @param CallbackFalse function call if room already exists and creation fails
    */
   CreateRoom(roomCode, CallbackTrue,  CallbackFalse){
-    this.http.post('http://localhost:3000/api/create/' + roomCode, {roomCode: roomCode}).subscribe(result => {
+    this.http.post(serv_url + '/api/create/' + roomCode, {roomCode: roomCode}).subscribe(result => {
       if(result){
         CallbackTrue(result);
       } else {
@@ -48,12 +54,59 @@ export class MafiaDbService {
    * @param callback function call on successful delete
    */
   DeleteRoom(roomCode, callback){
-    this.http.delete("http://localhost:3000/api/deleteRoom/" + roomCode).subscribe(result => {
+    this.http.delete(serv_url + '/api/deleteRoom/' + roomCode).subscribe(result => {
       if(result){
         callback(result)
-      }
+      };
+    });
+  };
+
+/**
+ * Add's players to a room in the database
+ * @param player the player object
+ * @param callback function called on completion
+ */
+  AddPlayerToRoom(player, callback){
+    this.http.post(serv_url + '/api/addPlayer', player).subscribe(result => {
+      callback(result);
+    });
+  };
+
+/**
+ * Searches for a player in a specific room
+ * @param roomCode The room to serch in
+ * @param name The name of the player
+ * @param callback function called on completion
+ */
+  GetPlayerByRoom(roomCode, name, callback){
+    this.http.get(serv_url + '/api/player', {params: {code: roomCode, name: name}}).subscribe(result => {
+      callback(result);
     })
   }
+
+
+/**
+ * Finds all players in a room
+ * @param roomCode the room to search
+ * @param callback function called on completion
+ */
+  GetAllPlayersInRoom(roomCode, callback){
+    this.http.get(serv_url + '/api/allPlayers/' + roomCode).subscribe(result => {
+      callback(result)
+    })
+  }
+
+/**
+ * Adds message to database of messages
+ * @param message message object
+ * @param callback function called on completion
+ */
+  AddMessage(message, callback){
+    this.http.post(serv_url + '/api/addMessage', message).subscribe(result => {
+      callback(result);
+    })
+  }
+
 
   /**
    * Makes a call to the server to update the number of occupants in a given room
@@ -62,7 +115,7 @@ export class MafiaDbService {
    * @param callback function call on completion
    */
   UpdateRoom(roomCode, callback){
-    this.http.put("http://localhost:3000/api/allMessages/" + roomCode, null).subscribe(result =>{
+    this.http.get(serv_url + '/api/allMessages/' + roomCode).subscribe(result =>{
       if(result){
         callback(result)
       }

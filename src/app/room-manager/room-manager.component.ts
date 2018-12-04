@@ -52,22 +52,22 @@ export class RoomManagerComponent implements OnInit {
   createRoom() {
     var pass = false;
     var code = this.generateRoomCode();
-      this.service.CheckRoomByID(code, result => {
-        if (result == null) {
-          this.service.CreateRoom(code, succeed => {
-            this.router.navigate(['/room', code]);
-            this.room = code;
-            console.log(succeed)
-          },
-            fail => {
-              console.log(fail)
-            })
+    this.service.CheckRoomByID(code, result => {
+      if (result == null) {
+        this.service.CreateRoom(code, succeed => {
+          this.router.navigate(['/room', code]);
+          this.room = code;
+          console.log(succeed)
+        },
+          fail => {
+            console.log(fail)
+          })
 
-        } else {
-          console.log("Room already exists. Creating new one...")
-          this.createRoom();
-        }
-      })
+      } else {
+        console.log("Room already exists. Creating new one...")
+        this.createRoom();
+      }
+    })
   }
 
   /**
@@ -137,5 +137,81 @@ export class RoomManagerComponent implements OnInit {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     return text;
   };
+
+
+
+
+  /**
+   * Temporary Method for Data Manipulation and Server Interaction
+   * 
+   * Expand and Uncomment a section to generate/retrieve test data
+   */
+  testMethod() {
+
+    //region Get All Rooms
+    // this.service.GetAllRooms(result => {
+    //   console.log(result);
+    // })
+    //endregion
+
+
+    //region Get Single Room
+    // this.service.CheckRoomByID("ROOM", result => {
+    //   console.log(result);
+    // })
+    //endregion
+
+    //region Create Room
+    // this.service.CreateRoom("TEST", success => {
+    //   console.log(success);
+    // }, result => {
+    //   console.log(result);
+    // });
+    //endregion
+
+    //region Delete Room
+    // this.service.DeleteRoom("TEST", result => {
+    //   console.log(result);
+    // })
+    //endregion
+
+    //region Add Player
+    // var player = {
+    //   name: "TEST_NAME",
+    //   roomCode: "ROOM",
+    //   role: null
+    // }
+    // this.service.AddPlayerToRoom(player, result => {
+    //   console.log(result);
+    // })
+    //endregion
+
+    //region Find a Player in Room
+    // this.service.GetPlayerByRoom("ROOM", "Bryan", result => {
+    //   console.log(result);
+    // });
+    //endregion
+
+    //region Find all players in Room
+    // this.service.GetAllPlayersInRoom("ROOM", result => {
+    //   console.log(result);
+    // });
+    //endregion
+
+    //region Add Message
+    // var message = {
+    //   roomCode: "ROOM",
+    //   text: "Test Message",
+    //   timestamp: Date.now()
+    // }
+    // this.service.AddMessage(message, result => {
+    //   console.log(result);
+    // })
+    // endregion
+
+
+
+
+  }
 
 }
