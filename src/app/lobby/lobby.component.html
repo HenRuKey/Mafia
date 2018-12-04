@@ -1,4 +1,14 @@
-<h2 class="room-code">Room Code: {{roomCode}}</h2>
-<div class="players">
-  <div *ngFor="let player of players;" class="person">{{player}}</div>
+<div class="name-prompt">
+  <form (submit)="joinLobby(name.value)">
+    <label>Enter your name:</label>
+    <input type="text" #name/>
+    <input type="submit" value="Join Lobby"/>
+    <label class="error">Invalid Name.</label>
+  </form>
+</div>
+<div class="lobby">
+  <h2 class="room-code">Room Code: {{roomCode}}</h2>
+  <div class="players col-md-9 col-10">
+    <div *ngFor="let player of players;" class="player">{{player}}</div>
+  </div>
 </div>
