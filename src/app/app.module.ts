@@ -6,13 +6,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RoomManagerComponent } from './room-manager/room-manager.component';
 import { LobbyComponent } from './lobby/lobby.component';
+import { MessageBoxComponent } from './message-box/message-box.component';
 import { MafiaDbService } from './mafia-db.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     RoomManagerComponent,
-    LobbyComponent
+    LobbyComponent,
+    MessageBoxComponent
   ],
   imports: [
     BrowserModule,

@@ -13,34 +13,34 @@ import { RouterLink, Router } from '@angular/router';
 
 export class RoomManagerComponent implements OnInit {
 
-/**
- * Temporary test variable used for tracking the room code of a created or joined room.
- * TODO: Move this to whichever component.ts will be handling specific room logic
- */
-  private room : string;
-  private service : MafiaDbService;
-  private router : Router;
+  /**
+   * Temporary test variable used for tracking the room code of a created or joined room.
+   * TODO: Move this to whichever component.ts will be handling specific room logic
+   */
+  private room: string;
+  private service: MafiaDbService;
+  private router: Router;
 
-  constructor(service : MafiaDbService, router : Router) {
+  constructor(service: MafiaDbService, router: Router) {
     this.service = service;
     this.router = router;
   }
 
   ngOnInit() {
     // Visual events
-    $("#left").mouseenter(function() {    // Mouse enters left side
+    $("#left").mouseenter(function () {    // Mouse enters left side
       $(this).addClass("hover-left");
       $("#right").addClass("hover-left");
     });
-    $("#left").mouseleave(function() {    // Mouse leaves left side
+    $("#left").mouseleave(function () {    // Mouse leaves left side
       $(this).removeClass("hover-left");
       $("#right").removeClass("hover-left");
     });
-    $("#right").mouseenter(function() {    // Mouse enters right side
+    $("#right").mouseenter(function () {    // Mouse enters right side
       $(this).addClass("hover-right");
       $("#left").addClass("hover-right");
     });
-    $("#right").mouseleave(function() {    // Mouse leaves right side
+    $("#right").mouseleave(function () {    // Mouse leaves right side
       $(this).removeClass("hover-right");
       $("#left").removeClass("hover-right");
     });
@@ -50,6 +50,7 @@ export class RoomManagerComponent implements OnInit {
    * Initializes a room with a unique four-letter key.
    */
   createRoom() {
+    var pass = false;
     var code = this.generateRoomCode();
     this.service.CheckRoomByID(code, result => {
       if (result == null) {
@@ -64,10 +65,9 @@ export class RoomManagerComponent implements OnInit {
 
       } else {
         console.log("Room already exists. Creating new one...")
-        //TODO Handle the rare case of a room already existing.
+        this.createRoom();
       }
     })
-
   }
 
   /**
@@ -87,10 +87,8 @@ export class RoomManagerComponent implements OnInit {
       $(".error").css("visibility", "hidden");
       this.service.CheckRoomByID(roomCode, result => {
         if (result != null) {
-          this.service.UpdateRoom(roomCode, 1, result => {
-            this.room = roomCode;
-            this.router.navigate(['/room', this.room]);
-          })
+          this.room = roomCode;
+          this.router.navigate(['/room', this.room]);
         } else {
           $(".error").text("Room Doesn't Exist")
           $(".error").css("visibility", "visible");
@@ -119,22 +117,6 @@ export class RoomManagerComponent implements OnInit {
   }
 
   /**
-   * Handles event when client exist browser, redirects, submits form, etc.
-   * Asks service to update the server. Intended as a method of tracking when 
-   * a client leaves a room
-   * 
-   * 
-   * TODO: Move this method so it exists in the "room's" copmonent.ts
-   */
-  beforeExit() {
-    if (this.room != "") {
-      this.service.UpdateRoom(this.room, -1, result => {
-        console.log(result)
-      })
-    }
-  }
-
-  /**
    * Validates a roomcode.
    * @param roomCode  the room code to validate
    * @returns         true if the code is valid
@@ -155,5 +137,81 @@ export class RoomManagerComponent implements OnInit {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     return text;
   };
+
+
+
+
+  /**
+   * Temporary Method for Data Manipulation and Server Interaction
+   * 
+   * Expand and Uncomment a section to generate/retrieve test data
+   */
+  testMethod() {
+
+    //region Get All Rooms
+    // this.service.GetAllRooms(result => {
+    //   console.log(result);
+    // })
+    //endregion
+
+
+    //region Get Single Room
+    // this.service.CheckRoomByID("ROOM", result => {
+    //   console.log(result);
+    // })
+    //endregion
+
+    //region Create Room
+    // this.service.CreateRoom("TEST", success => {
+    //   console.log(success);
+    // }, result => {
+    //   console.log(result);
+    // });
+    //endregion
+
+    //region Delete Room
+    // this.service.DeleteRoom("TEST", result => {
+    //   console.log(result);
+    // })
+    //endregion
+
+    //region Add Player
+    // var player = {
+    //   name: "TEST_NAME",
+    //   roomCode: "ROOM",
+    //   role: null
+    // }
+    // this.service.AddPlayerToRoom(player, result => {
+    //   console.log(result);
+    // })
+    //endregion
+
+    //region Find a Player in Room
+    // this.service.GetPlayerByRoom("ROOM", "Bryan", result => {
+    //   console.log(result);
+    // });
+    //endregion
+
+    //region Find all players in Room
+    // this.service.GetAllPlayersInRoom("ROOM", result => {
+    //   console.log(result);
+    // });
+    //endregion
+
+    //region Add Message
+    // var message = {
+    //   roomCode: "ROOM",
+    //   text: "Test Message",
+    //   timestamp: Date.now()
+    // }
+    // this.service.AddMessage(message, result => {
+    //   console.log(result);
+    // })
+    // endregion
+
+
+
+
+  }
 
 }

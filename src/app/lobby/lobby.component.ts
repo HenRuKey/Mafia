@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MafiaDbService } from '../mafia-db.service';
 
 @Component({
   selector: 'app-lobby',
@@ -11,18 +12,24 @@ export class LobbyComponent implements OnInit {
   private route : ActivatedRoute;
   private roomCode : string;
   private players : string[]; // TODO: Create player class to store name and info in.
+  private loopId;
+  private messages;
+  private dbService : MafiaDbService;
 
 
   /**
    * A lobby to identify present players and begin the game.
    */
-  constructor(route : ActivatedRoute) {
+  constructor(route : ActivatedRoute, dbService : MafiaDbService) {
     this.route = route;
+    this.dbService = dbService;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.getPlayers();
   }
 
   ngOnInit() {
+    this.refreshLoop();
+    this.loopId = setInterval(this.refreshLoop, 4000);
     // TODO: Add name entry section before allowing access to complete lobby
     // TODO: If the user is the room creator, give more controls (like a start game button)
   }
@@ -57,4 +64,10 @@ export class LobbyComponent implements OnInit {
     return true; // TODO: Add name verification logic
   }
 
+  private refreshLoop = () => {
+    this.dbService.UpdateRoom(this.roomCode, messageEntries => {
+      this.messages = messageEntries;
+      this.messages.sort((entry1, entry2) => entry1.timestamp - entry2.timestamp);
+    });
+  }
 }

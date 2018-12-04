@@ -1,6 +1,7 @@
 <div class="room-manager">
     <div class="rm-section left" id="left">
         <a class="button" (click)="createRoom()">Create Room</a>   
+        <a class="button" (click)="testMethod()">TestFeature</a>   
     </div>
     <div class="rm-section right" id="right">
         <div class="right-wrapper">
@@ -15,5 +16,3 @@
         </div>
     </div>
 </div>
-<!--TODO This line below needs to exist in the actual 'room' page, wherever that ends up being. (Lobby?) -->
-<div (window:unload)="beforeExit()"></div>
