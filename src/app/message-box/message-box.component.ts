@@ -9,7 +9,7 @@ export class MessageBoxComponent implements OnInit {
 
   constructor() { }
 
-  @Input() messages: string[];
+  @Input() messages;
   
   ngOnInit() {
   }
