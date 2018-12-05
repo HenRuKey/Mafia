@@ -12,7 +12,7 @@ export class MafiaDbService {
   constructor(private http: HttpClient) { }
 
 GetAllRooms(callback){
-  this.http.get("/api").subscribe(result => {
+  this.http.get(serv_url + "/api").subscribe(result => {
     callback(result)
   })
 }

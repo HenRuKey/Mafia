@@ -54,7 +54,7 @@ app.post("/api/create/:code", (req, res) => {
     console.log("Hit 3");
     var room = {
         roomCode: req.params.code,
-        created: "1543791424251"
+        created: Date.now()
     };
     var id = room.roomCode;
     if (!id) {
@@ -79,6 +79,7 @@ app.post("/api/create/:code", (req, res) => {
 app.delete("/api/deleteRoom/:code", (req, res) => {
     console.log("Hit 4");
     var id = req.params.code;
+    var query = {roommCode: id}
     if (!id) {
         res.status(400);
         res.json("Invalid Data");
@@ -89,6 +90,8 @@ app.delete("/api/deleteRoom/:code", (req, res) => {
             }
             res.json("Deleted");
         });
+        db.messages.remove(query);
+        db.players.remove(query);
     }
 });
 
