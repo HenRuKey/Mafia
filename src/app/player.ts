@@ -2,6 +2,7 @@ import { Role } from './role'
 import { PlayerJSON } from './playerJSON';
 
 export class Player {
+    private id : string;
     private name : string;
     private roomCode : string;
     private role : Role;
@@ -21,6 +22,14 @@ export class Player {
 
     get IsAlive() : boolean {
         return this.isAlive;
+    }
+
+    get Id() : string {
+        return this.id;
+    }
+
+    set Id(id : string){
+        this.id = id;
     }
 
     constructor(name : string, roomCode : string) {

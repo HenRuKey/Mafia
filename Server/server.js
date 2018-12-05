@@ -14,7 +14,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //Returns all rooms
 app.get("/api", (req, res) => {
-    console.log("Hit 1");
     db.rooms.find(function (err, rooms) {
         if (err) {
             console.log(err);
@@ -26,7 +25,6 @@ app.get("/api", (req, res) => {
 
 //Returns the room matching the code
 app.get("/api/room/:code", (req, res) => {
-    console.log("Hit 2");
     var query = { roomCode: req.params.code };
     db.rooms.findOne(query, function (err, room) {
         if (err) {
@@ -51,7 +49,6 @@ app.get("/api/room/:code", (req, res) => {
 
 //Creates a room with a given code.
 app.post("/api/create/:code", (req, res) => {
-    console.log("Hit 3");
     var room = {
         roomCode: req.params.code,
         created: Date.now()
@@ -77,7 +74,6 @@ app.post("/api/create/:code", (req, res) => {
 
 // Delete the room with the matching code
 app.delete("/api/deleteRoom/:code", (req, res) => {
-    console.log("Hit 4");
     var id = req.params.code;
     var query = {roommCode: id}
     if (!id) {
@@ -98,7 +94,6 @@ app.delete("/api/deleteRoom/:code", (req, res) => {
 
 // Add Player
 app.post("/api/addPlayer", (req, res) => {
-    console.log("Hit 5");
     var player = req.body;
     if (!player) {
         res.status(400);
@@ -115,7 +110,6 @@ app.post("/api/addPlayer", (req, res) => {
 
 // Get Player from room
 app.get("/api/player", (req, res) => {
-    console.log("Hit 6");
     var query = { roomCode: req.query.code, name: req.query.name };
     db.players.findOne(query, function (err, player) {
         if (err) {
@@ -129,7 +123,6 @@ app.get("/api/player", (req, res) => {
 
 // Get All Players in Room by code
 app.get("/api/allPlayers/:code", (req, res) => {
-    console.log("Hit 7");
     var query = { roomCode: req.params.code };
     db.players.find(query, function (err, players) {
         if (err) {
@@ -142,9 +135,19 @@ app.get("/api/allPlayers/:code", (req, res) => {
 });
 
 
+app.put("/api/updatePlayer", (req, res) => {
+    var query = { _id: mongojs.ObjectId(player.id) };
+    db.players.update(query, {
+        name: player.name,
+        roomCode: player.roomCode,
+        role: player.role,
+        isAlive: player.isAlive
+    })
+})
+
+
 // Add Message
 app.post("/api/addMessage", (req, res) => {
-    console.log("Hit 8");
     var message = req.body;
     if (!message) {
         res.status(400);
@@ -162,7 +165,6 @@ app.post("/api/addMessage", (req, res) => {
 
 // Get All Messages by Code
 app.get("/api/allMessages/:code", (req, res) => {
-    console.log("Hit 9");
     var query = { roomCode: req.params.code };
     db.messages.find(query, function (err, players) {
         if (err) {

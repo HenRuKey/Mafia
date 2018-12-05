@@ -97,6 +97,17 @@ GetAllRooms(callback){
   }
 
 /**
+ * 
+ * @param player Updates a player by their _id
+ * @param callback function called on completion
+ */
+  UpdatePlayer(player, callback){
+    this.http.put(serv_url + "/api/updatePlayer", player).subscribe(result => {
+      callback(result)
+    })
+  }
+
+/**
  * Adds message to database of messages
  * @param message message object
  * @param callback function called on completion

@@ -154,7 +154,6 @@ export class RoomManagerComponent implements OnInit {
     // })
     //endregion
 
-
     //region Get Single Room
     // this.service.CheckRoomByID("ROOM", result => {
     //   console.log(result);
