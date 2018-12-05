@@ -12,11 +12,10 @@ export class LobbyComponent implements OnInit {
 
   private route : ActivatedRoute;
   private roomCode : string;
-  private players : Player[]; // TODO: Create player class to store name and info in.
+  private players : Player[];
   private loopId;
   private messages;
   private dbService : MafiaDbService;
-
 
   /**
    * A lobby to identify present players and begin the game.
@@ -55,7 +54,9 @@ export class LobbyComponent implements OnInit {
       $(".error").css("visibility", "hidden"); // Hides the error message if visible
       
       let player : Player = new Player(name, this.roomCode);
-      this.dbService.AddPlayerToRoom(player.toJSON(), () => {});
+      this.dbService.AddPlayerToRoom(player.toJSON(), () => {
+        this.dbService.AddMessage({text: `${player.Name} has joined the lobby.`, roomCode: this.roomCode, timestamp: Date.now()}, () => {});
+      });
 
       // Hides name prompt and reveals lobby
       $(".name-prompt").css("display", "none");

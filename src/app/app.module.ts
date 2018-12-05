@@ -8,13 +8,15 @@ import { RoomManagerComponent } from './room-manager/room-manager.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { MessageBoxComponent } from './message-box/message-box.component';
 import { MafiaDbService } from './mafia-db.service';
+import { MainGameComponent } from './main-game/main-game.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RoomManagerComponent,
     LobbyComponent,
-    MessageBoxComponent
+    MessageBoxComponent,
+    MainGameComponent
   ],
   imports: [
     BrowserModule,
