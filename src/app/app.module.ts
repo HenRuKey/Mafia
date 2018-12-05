@@ -9,6 +9,7 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { MessageBoxComponent } from './message-box/message-box.component';
 import { MafiaDbService } from './mafia-db.service';
 import { MainGameComponent } from './main-game/main-game.component';
+import { VotingComponent } from './voting/voting.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { MainGameComponent } from './main-game/main-game.component';
     RoomManagerComponent,
     LobbyComponent,
     MessageBoxComponent,
-    MainGameComponent
+    MainGameComponent,
+    VotingComponent
   ],
   imports: [
     BrowserModule,
