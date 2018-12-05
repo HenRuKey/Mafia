@@ -55,7 +55,9 @@ export class LobbyComponent implements OnInit {
       $(".error").css("visibility", "hidden"); // Hides the error message if visible
       
       let player : Player = new Player(name, this.roomCode);
-      this.dbService.AddPlayerToRoom(player.toJSON(), () => {});
+      this.dbService.AddPlayerToRoom(player.toJSON(), (result) => {
+        player.Id = result["_id"];
+      });
 
       // Hides name prompt and reveals lobby
       $(".name-prompt").css("display", "none");
