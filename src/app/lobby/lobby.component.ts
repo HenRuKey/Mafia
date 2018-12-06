@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MafiaDbService } from '../mafia-db.service';
 import { Player } from '../player';
 
@@ -13,16 +13,19 @@ export class LobbyComponent implements OnInit {
   private route : ActivatedRoute;
   private roomCode : string;
   private players : Player[];
+  private userPlayer : Player;
   private loopId;
   private messages;
   private dbService : MafiaDbService;
+  private router : Router;
 
   /**
    * A lobby to identify present players and begin the game.
    */
-  constructor(route : ActivatedRoute, dbService : MafiaDbService) {
+  constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router) {
     this.route = route;
     this.dbService = dbService;
+    this.router = router;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.getPlayers();
   }
@@ -53,11 +56,11 @@ export class LobbyComponent implements OnInit {
     if (this.isValidName(name)) {
       $(".error").css("visibility", "hidden"); // Hides the error message if visible
       
-      let player : Player = new Player(name, this.roomCode);
-      this.dbService.AddPlayerToRoom(player.toJSON(), (result) => {
-        player.Id = result["_id"];
+      this.userPlayer = new Player(name, this.roomCode);
+      this.dbService.AddPlayerToRoom(this.userPlayer.toJSON(), (result) => {
+        this.userPlayer.Id = result["_id"];
       });
-      this.dbService.AddMessage({text: `${player.Name} has joined the lobby.`, roomCode: this.roomCode, timestamp: Date.now()}, () => {});
+      this.dbService.AddMessage({text: `${this.userPlayer.Name} has joined the lobby.`, roomCode: this.roomCode, timestamp: Date.now()}, () => {});
       
       // Hides name prompt and reveals lobby
       $(".name-prompt").css("display", "none");
@@ -76,6 +79,13 @@ export class LobbyComponent implements OnInit {
    */
   isValidName(name : string) : boolean {
     return name.length > 0 && name.length < 25;
+  }
+
+  /**
+   * Redirects the player to the main game component.
+   */
+  startGame() {
+    this.router.navigate(['/game', this.roomCode, this.userPlayer.Name]);
   }
 
   private refreshLoop = () => {
