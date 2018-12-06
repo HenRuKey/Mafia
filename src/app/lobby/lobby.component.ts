@@ -53,7 +53,6 @@ export class LobbyComponent implements OnInit {
       }
     });
     console.log(this.players);
-    console.log(this.cookies.check("playerId"));  
   }
 
   /**
