@@ -10,6 +10,7 @@ import { MessageBoxComponent } from './message-box/message-box.component';
 import { MafiaDbService } from './mafia-db.service';
 import { MainGameComponent } from './main-game/main-game.component';
 import { VotingComponent } from './voting/voting.component';
+import {CookieService} from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { VotingComponent } from './voting/voting.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [MafiaDbService],
+  providers: [MafiaDbService, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

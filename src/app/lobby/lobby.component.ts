@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MafiaDbService } from '../mafia-db.service';
 import { Player } from '../player';
+import { CookieService } from 'ngx-cookie-service';
+import { BootstrapOptions } from '@angular/core/src/application_ref';
 
 @Component({
   selector: 'app-lobby',
@@ -18,21 +20,26 @@ export class LobbyComponent implements OnInit {
   private messages;
   private dbService : MafiaDbService;
   private router : Router;
+  private cookies : CookieService;
 
   /**
    * A lobby to identify present players and begin the game.
    */
-  constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router) {
+
+  constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router, cookies : CookieService) {
     this.route = route;
     this.dbService = dbService;
     this.router = router;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
+    this.cookies = cookies;
     this.getPlayers();
   }
 
   ngOnInit() {
     this.refreshLoop();
     this.loopId = setInterval(this.refreshLoop, 4000);
+    const joinedRoomCookie: boolean = this.cookies.check("playerId");
+    this.skipNameEntry(joinedRoomCookie)
   }
 
   /**
@@ -46,6 +53,7 @@ export class LobbyComponent implements OnInit {
       }
     });
     console.log(this.players);
+    console.log(this.cookies.check("playerId"));  
   }
 
   /**
@@ -55,10 +63,12 @@ export class LobbyComponent implements OnInit {
   joinLobby(name : string) {
     if (this.isValidName(name)) {
       $(".error").css("visibility", "hidden"); // Hides the error message if visible
-      
+
       this.userPlayer = new Player(name, this.roomCode);
       this.dbService.AddPlayerToRoom(this.userPlayer.toJSON(), (result) => {
+        debugger;
         this.userPlayer.Id = result["_id"];
+        this.cookies.set("playerId", this.userPlayer.Id, 22, "/room/" + this.roomCode);
       });
       this.dbService.AddMessage({text: `${this.userPlayer.Name} has joined the lobby.`, roomCode: this.roomCode, timestamp: Date.now()}, () => {});
       
@@ -94,5 +104,13 @@ export class LobbyComponent implements OnInit {
       this.messages.sort((entry1, entry2) => entry1.timestamp - entry2.timestamp);
     });
     this.getPlayers();
+  }
+
+
+  private skipNameEntry = (bool: boolean) => {
+    if(bool){
+      $(".name-prompt").css("display", "none");
+      $(".lobby").css("display", "block");
+    }
   }
 }
