@@ -32,7 +32,7 @@ app.get("/api/room/:code", (req, res) => {
             res.send(err);
         }
         if (room != null) {
-            console.log("Room exists");
+            
             var oldDate = parseInt(room.created);
             var newDate = Date.now();
             if (newDate - oldDate >= exprationLimit) {
@@ -74,21 +74,20 @@ app.post("/api/create/:code", (req, res) => {
 
 // Delete the room with the matching code
 app.delete("/api/deleteRoom/:code", (req, res) => {
-    var id = req.params.code;
-    var query = {roommCode: id}
-    if (!id) {
-        res.status(400);
-        res.json("Invalid Data");
-    } else {
-        db.rooms.remove({ roomCode: id }, function (err) {
-            if (err) {
-                res.send(err);
+    var query = {roomCode: req.params.code}
+    db.rooms.findOne(query, function (err, room) {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        if (room != null) {
+                db.rooms.remove(room);
+                room = null;
             }
-            res.json("Deleted");
-        });
-        db.messages.remove(query);
-        db.players.remove(query);
-    }
+            db.messages.remove(query);
+            db.players.remove(query);
+        res.json("Deleted");
+    });
 });
 
 
