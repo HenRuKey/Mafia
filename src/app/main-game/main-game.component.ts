@@ -23,6 +23,7 @@ export class MainGameComponent implements OnInit {
   }
 
   ngOnInit() {
+  
   }
 
 }
