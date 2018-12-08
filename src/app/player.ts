@@ -31,6 +31,7 @@ export class Player {
     set Id(id : string){
         this.id = id;
     }
+    
 
     constructor(name : string, roomCode : string) {
         //this._service = service;
@@ -48,4 +49,15 @@ export class Player {
             roomCode: this.roomCode
         });
     }
+
+    fromJSON(player: PlayerJSON){
+        this.name = player.name,
+        this.role = player.role,
+        this.isAlive = player.isAlive,
+        this.roomCode = player.roomCode
+    }
+
+
+
+
 }

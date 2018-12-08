@@ -69,9 +69,6 @@ app.post("/api/create/:code", (req, res) => {
 });
 
 
-
-
-
 // Delete the room with the matching code
 app.delete("/api/deleteRoom/:code", (req, res) => {
     var query = {roomCode: req.params.code}
@@ -133,17 +130,29 @@ app.get("/api/allPlayers/:code", (req, res) => {
 
 });
 
-
+//Updates a player
 app.put("/api/updatePlayer", (req, res) => {
     var query = { _id: mongojs.ObjectId(player.id) };
     db.players.update(query, {
         name: player.name,
         roomCode: player.roomCode,
         role: player.role,
-        isAlive: player.isAlive
+        isAlive: player.isAlive,
     })
 })
 
+
+//Get player by role
+app.get("/api/role/", (req, res) => {
+    var query = {roomCode: req.query.code, role: req.query.role};
+    db.players.find(query, function (err, players) {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        res.json(players);
+    });
+})
 
 // Add Message
 app.post("/api/addMessage", (req, res) => {
@@ -174,11 +183,6 @@ app.get("/api/allMessages/:code", (req, res) => {
     });
 
 });
-
-
-
-
-
 
 
 http.listen(3000, function () {

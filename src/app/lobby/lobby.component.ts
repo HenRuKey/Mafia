@@ -65,9 +65,8 @@ export class LobbyComponent implements OnInit {
 
       this.userPlayer = new Player(name, this.roomCode);
       this.dbService.AddPlayerToRoom(this.userPlayer.toJSON(), (result) => {
-        debugger;
         this.userPlayer.Id = result["_id"];
-        this.cookies.set("playerId", this.userPlayer.Id, 22, "/room/" + this.roomCode);
+        this.cookies.set("playerId", this.userPlayer.Name, 2, "/room/" + this.roomCode);
       });
       this.dbService.AddMessage({text: `${this.userPlayer.Name} has joined the lobby.`, roomCode: this.roomCode, timestamp: Date.now()}, () => {});
       
@@ -110,6 +109,10 @@ export class LobbyComponent implements OnInit {
     if(bool){
       $(".name-prompt").css("display", "none");
       $(".lobby").css("display", "block");
+      this.dbService.GetPlayerByRoom(this.roomCode, this.cookies.get("playerId"), result => {
+        this.userPlayer = new Player("placeholder", this.roomCode);
+        this.userPlayer.fromJSON(result);
+      })
     }
   }
 }

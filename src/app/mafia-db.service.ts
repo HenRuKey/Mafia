@@ -108,6 +108,20 @@ GetAllRooms(callback){
   }
 
 /**
+ * 
+ * @param roomCode the room to search in
+ * @param role the role to search by
+ * @param callback function called on completion
+ */
+  GetPlayerByRole(roomCode, role, callback){
+    this.http.get(serv_url + "/api/role/",  {params: {code: roomCode, role: role}}).subscribe(result => {
+      callback(result);
+    })
+  }
+
+
+
+/**
  * Adds message to database of messages
  * @param message message object
  * @param callback function called on completion
