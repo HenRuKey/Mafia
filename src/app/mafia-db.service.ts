@@ -146,6 +146,5 @@ GetAllRooms(callback){
       }
     })
   }
-
 }
 

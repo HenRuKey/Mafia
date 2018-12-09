@@ -33,11 +33,11 @@ export class Player {
     }
     
 
-    constructor(name : string, roomCode : string) {
+    constructor(name : string, roomCode : string, role = Role.UNASSIGNED) {
         //this._service = service;
         this.name = name;
         this.roomCode = roomCode;
-        this.role = Role.UNASSIGNED;
+        this.role = role;
         this.isAlive = true;
     }
 
@@ -56,8 +56,4 @@ export class Player {
         this.isAlive = player.isAlive,
         this.roomCode = player.roomCode
     }
-
-
-
-
 }

@@ -3,5 +3,4 @@ export enum Role {
     CITIZEN,
     MAFIA,
     DETECTIVE,
-    DOCTOR
 }
