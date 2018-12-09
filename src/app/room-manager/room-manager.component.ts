@@ -186,9 +186,9 @@ export class RoomManagerComponent implements OnInit {
     //endregion
 
     //region Find a Player in Room
-    // this.service.GetPlayerByRoom("ROOM", "Bryan", result => {
-    //   console.log(result);
-    // });
+    this.service.GetPlayerByRoom("VMEG", "Bob", result => {
+      console.log(result);
+    });
     //endregion
 
     //region Find all players in Room

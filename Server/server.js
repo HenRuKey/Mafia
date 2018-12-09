@@ -91,6 +91,7 @@ app.delete("/api/deleteRoom/:code", (req, res) => {
 // Add Player
 app.post("/api/addPlayer", (req, res) => {
     var player = req.body;
+    player.lastActive = Date.now()
     if (!player) {
         res.status(400);
         res.json("Invalid Data");
@@ -138,6 +139,7 @@ app.put("/api/updatePlayer", (req, res) => {
         roomCode: player.roomCode,
         role: player.role,
         isAlive: player.isAlive,
+        lastActive: Date.now()
     })
 })
 

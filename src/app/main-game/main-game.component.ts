@@ -23,19 +23,22 @@ export class MainGameComponent implements OnInit {
     this.route = route;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.dbService = dbService;
-    this.userPlayer = this.getUserPlayer();
+    this.getUserPlayer(); // Can't use this.userPlayer = this.getUserPlayer because of async.
+    console.log("Begin")
     console.log(this.userPlayer);
     this.players = this.getPlayers();
     console.log(this.players);
+    console.log("End")
   }
 
-  private getUserPlayer() : Player {
-    let userPlayer : Player;
+  private getUserPlayer(){
+    //let userPlayer : Player; 
+    this.userPlayer = new Player("Temp", this.roomCode, 0);
     let name : string = this.route.snapshot.paramMap.get('userPlayer');
     this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
-      userPlayer = player;
+      this.userPlayer = player; // Must be set directly inside callback
+      console.log(this.userPlayer)
     });
-    return userPlayer;
   }
 
   private getPlayers() : Player[] {
