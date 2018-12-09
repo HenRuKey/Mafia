@@ -16,17 +16,37 @@ export class MainGameComponent implements OnInit {
   private roomCode : string;
   private route : ActivatedRoute;
   private players : Player[];
+  private dbService : MafiaDbService;
   @ViewChild(VotingComponent) voting : VotingComponent;
 
   constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router) { 
     this.route = route;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
-    dbService.GetPlayerByRoom(this.roomCode, this.route.snapshot.paramMap.get('userPlayer'), (player) => {
-      this.userPlayer = player;
+    this.dbService = dbService;
+    this.userPlayer = this.getUserPlayer();
+    console.log(this.userPlayer);
+    this.players = this.getPlayers();
+    console.log(this.players);
+  }
+
+  private getUserPlayer() : Player {
+    let userPlayer : Player;
+    let name : string = this.route.snapshot.paramMap.get('userPlayer');
+    this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
+      userPlayer = player;
     });
-    dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
-      this.players = players;
+    return userPlayer;
+  }
+
+  private getPlayers() : Player[] {
+    let playerArray : Player[] = [];
+    this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
+      players.forEach(element => {
+        let player : Player = element as Player;
+        playerArray.push(player);
+      });
     });
+    return playerArray;
   }
 
   ngOnInit() {

@@ -22,7 +22,16 @@ export class VotingComponent implements OnInit {
    * @param voteType The type of vote to hold.
    */
   populateBallot(players : Player[], userPlayer : Player, voteType: VoteType) {
-    console.log("working");
+    if ($(".player-buttons").children.length > 0) {
+      $(".player-buttons").empty();
+    }
+    players.forEach(player => {
+      if (player.Id != userPlayer.Id && player.IsAlive) {
+        $(".player-buttons").append(`
+          <a class="player">{{ ${player.Name} }}</a>
+        `);
+      }
+    });
   }
 
   /**
