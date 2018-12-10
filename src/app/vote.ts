@@ -4,17 +4,17 @@ import { VoteJSON } from "./voteJSON";
 
 export class Vote {
 
-    private electionId : number;
+    private electionId : string;
     private voteType : VoteType;
     private voter : Player;
     private recipient : Player;
 
-    get ElectionId() : number {
+    get ElectionId() : string {
         return this.electionId;
     }
 
     get VoteType() : VoteType {
-        return this.VoteType;
+        return this.voteType;
     }
 
     get Voter() : Player {
@@ -25,10 +25,11 @@ export class Vote {
         return this.recipient;
     }
 
-    constructor(electionId : number, voteType : VoteType, voter : Player, recipient : Player) {
+    constructor(electionId : string, voteType : VoteType, voter : Player, recipient : Player) {
         this.electionId = electionId;
         this.voteType = voteType;
         this.voter = voter;
+        this.recipient = recipient;
     }
 
     toJSON() : VoteJSON {

@@ -7,6 +7,8 @@ import { VoteType } from '../vote-type'
 import { CookieService } from 'ngx-cookie-service';
 import { promise } from 'protractor';
 import { Role } from '../role';
+import { Vote } from '../vote';
+import { Phases } from '../phases';
 
 @Component({
   selector: 'app-main-game',
@@ -29,31 +31,7 @@ export class MainGameComponent implements OnInit {
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.dbService = dbService;
     this.cookies = cookies;
-    //this.getUserPlayer();
-    //this.players = this.getPlayers();
   }
-
-  // private getUserPlayer() {
-  //   //let userPlayer : Player; 
-  //   this.userPlayer = new Player("Temp", this.roomCode, 0);
-  //   let name: string = this.route.snapshot.paramMap.get('userPlayer');
-  //   this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
-  //     this.userPlayer = player;
-  //     console.log(this.userPlayer);
-  //     console.log(this.cookies.getAll());
-  //   });
-  // }
-
-  // private getPlayers(): Player[] {
-  //   let playerArray: Player[] = [];
-  //   this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
-  //     players.forEach(element => {
-  //       let player: Player = element as Player;
-  //       playerArray.push(player);
-  //     });
-  //   });
-  //   return playerArray;
-  // }
 
   ngOnInit() {
     let name: string = this.route.snapshot.paramMap.get('userPlayer');
@@ -69,17 +47,17 @@ export class MainGameComponent implements OnInit {
           playerArray.push(player);
         });
         this.players = playerArray;
-        this.voting.populateBallot(this.players, this.userPlayer, VoteType.UNASSIGNED); // TODO: Remove line after testing.
+        this.voting.populateBallot(this.players, this.userPlayer, VoteType.UNASSIGNED, this.submitVote); // TODO: Remove line after testing.
       });
     });
   }
 
-
-
-  
-
-
-
-
+  submitVote = (playerName : string) => {
+    this.dbService.GetPlayerByRoom(this.roomCode, playerName, (selectedPlayer) => {
+      this.dbService.CheckRoomByID(this.roomCode, (room) => {
+        this.dbService.AddVote(new Vote(`${ this.roomCode }${ room['phase'] }`, VoteType.MAFIA, this.userPlayer, selectedPlayer), () => {}, this.cookies.check('playerId'));
+      });
+    });
+  }
 
 }

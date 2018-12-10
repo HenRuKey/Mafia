@@ -21,7 +21,7 @@ export class VotingComponent implements OnInit {
    * @param userPlayer The player who is using this instance of the app.
    * @param voteType The type of vote to hold.
    */
-  populateBallot(players : Player[], userPlayer : Player, voteType: VoteType) {
+  populateBallot(players : Player[], userPlayer : Player, voteType: VoteType, callback : any) {
     if ($(".player-buttons").children.length > 0) {
       $(".player-buttons").empty();
     }
@@ -29,9 +29,13 @@ export class VotingComponent implements OnInit {
     players.forEach(player => {
       if (player.Id != userPlayer.Id && player.IsAlive) {
         $(".player-buttons").append(`
-          <input type="radio" name="recipient" value="${ player.Name }">${ player.Name }<br>
+          <input type="radio" name="player" value="${ player.Name }">${ player.Name }<br>
         `);
       }
+    });
+    $(".submit-vote").click(() => {
+      let playerName : any = $("input[name='player']:checked").val();
+      callback(playerName);
     });
   }
 
