@@ -28,7 +28,7 @@ export class Player {
         return this.id;
     }
 
-    set Id(id : string){
+    set Id(id : string) {
         this.id = id;
     }
     
@@ -43,10 +43,10 @@ export class Player {
 
     toJSON() : PlayerJSON {
         return Object.assign({}, this, {
-            name: this.name,
-            role: this.role,
-            isAlive: this.isAlive,
-            roomCode: this.roomCode
+            name: this.Name,
+            role: this.Role,
+            isAlive: this.IsAlive,
+            roomCode: this.RoomCode
         });
     }
 
