@@ -25,10 +25,11 @@ export class VotingComponent implements OnInit {
     if ($(".player-buttons").children.length > 0) {
       $(".player-buttons").empty();
     }
+    console.log(players);
     players.forEach(player => {
       if (player.Id != userPlayer.Id && player.IsAlive) {
         $(".player-buttons").append(`
-          <a class="player">{{ ${player.Name} }}</a>
+          <input type="radio" name="recipient" value="${ player.Name }">
         `);
       }
     });
