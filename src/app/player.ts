@@ -7,6 +7,7 @@ export class Player {
     private roomCode : string;
     private role : Role;
     private isAlive : boolean;
+    private lastActive: number;
 
     get Name() : string {
         return this.name;
@@ -28,7 +29,16 @@ export class Player {
         return this.id;
     }
 
+    get LastActive() : number {
+        return this.lastActive;
+    }
+
+    set IsAlive(isAlive : boolean) {
+        this.isAlive = isAlive
+    }    
+
     set Id(id : string) {
+
         this.id = id;
     }
     
@@ -39,6 +49,7 @@ export class Player {
         this.roomCode = roomCode;
         this.role = role;
         this.isAlive = true;
+        this.lastActive = 0;
     }
 
     toJSON() : PlayerJSON {
@@ -46,7 +57,8 @@ export class Player {
             name: this.Name,
             role: this.Role,
             isAlive: this.IsAlive,
-            roomCode: this.RoomCode
+            roomCode: this.RoomCode,
+            lastActive: this.LastActive
         });
     }
 
@@ -54,6 +66,7 @@ export class Player {
         this.name = player.name,
         this.role = player.role,
         this.isAlive = player.isAlive,
-        this.roomCode = player.roomCode
+        this.roomCode = player.roomCode,
+        this.lastActive = player.lastActive
     }
 }

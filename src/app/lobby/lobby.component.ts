@@ -5,6 +5,7 @@ import { Player } from '../player';
 import { CookieService } from 'ngx-cookie-service';
 import { BootstrapOptions } from '@angular/core/src/application_ref';
 import { Role } from '../role';
+import {Phases} from '../phases';
 
 @Component({
   selector: 'app-lobby',
@@ -99,15 +100,23 @@ export class LobbyComponent implements OnInit {
    * Redirects the player to the main game component.
    */
   startGame() {
+    this.dbService
     this.router.navigate(['/game', this.roomCode, this.userPlayer.Name]);
   }
 
   private refreshLoop = () => {
-    this.dbService.UpdateRoom(this.roomCode, messageEntries => {
-      this.messages = messageEntries;
+    this.dbService.GetRoomMessages(this.roomCode, messageEntries => {
+      this.messages = messageEntries.filter(
+          message => message.role == undefined || (this.userPlayer != undefined && message.role == this.userPlayer.Role)
+      );
       this.messages.sort((entry1, entry2) => entry1.timestamp - entry2.timestamp);
     });
     this.getPlayers();
+    this.dbService.CheckRoomByID(this.roomCode, result => {
+      if (result["phase"] != Phases.PREGAME){
+        this.router.navigate(['/game', this.roomCode, this.userPlayer.Name]);
+      }
+    })
   }
 
 

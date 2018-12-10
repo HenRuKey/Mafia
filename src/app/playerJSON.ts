@@ -5,4 +5,5 @@ export interface PlayerJSON {
     role : Role;
     roomCode : string;
     isAlive : boolean;
+    lastActive: number;
 }
