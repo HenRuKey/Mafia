@@ -67,6 +67,7 @@ export class Player {
     }
 
     fromJSON(player: PlayerJSON){
+        this.id = player["_id"]
         this.name = player.name,
         this.role = player.role,
         this.isAlive = player.isAlive,

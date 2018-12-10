@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Player } from './player';
 import { Role } from './role';
 import { MafiaDbService } from './mafia-db.service';
+import { Vote } from './vote';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,6 @@ import { MafiaDbService } from './mafia-db.service';
 export class EndGameService {
 
   private service: MafiaDbService;
-  private players: Player[]
   private activeTimeout = 300000;
   constructor(dbService: MafiaDbService) {
     this.service = dbService
@@ -24,6 +24,19 @@ export class EndGameService {
         })
       }
     })
+  }
+
+  CountVotes(votes: Vote[], players: Player[]) : Player{
+    var results = [];
+    players.forEach(player => {
+      var count = votes.filter((vote) => vote.Recipient === player).length
+      results.push({playerName: player.Name, voteCount: count})
+    });
+
+    var highest = results.reduce((max, v) => v.voteCount > max ? v.voteCount : max, results[0].voteCount);
+    var selected = results.find(c => c.voteCount === highest)
+    return players.find(p => p.Name == selected.playerName);
+    
   }
 
   KillSelectedPlayer(player: Player) {

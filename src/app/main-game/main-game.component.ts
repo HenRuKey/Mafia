@@ -5,6 +5,7 @@ import { MafiaDbService } from '../mafia-db.service';
 import { VotingComponent } from '../voting/voting.component';
 import { VoteType } from '../vote-type'
 import { CookieService } from 'ngx-cookie-service';
+import { promise } from 'protractor';
 
 @Component({
   selector: 'app-main-game',
@@ -13,43 +14,39 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class MainGameComponent implements OnInit {
 
-  private userPlayer : Player;
-  private roomCode : string;
-  private route : ActivatedRoute;
-  private players : Player[];
-  private dbService : MafiaDbService;
-  private cookies : CookieService;
-  @ViewChild(VotingComponent) voting : VotingComponent;
+  private userPlayer: Player;
+  private roomCode: string;
+  private route: ActivatedRoute;
+  private players: Player[];
+  private dbService: MafiaDbService;
+  private cookies: CookieService;
+  @ViewChild(VotingComponent) voting: VotingComponent;
 
-  constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router, cookies : CookieService) { 
+  constructor(route: ActivatedRoute, dbService: MafiaDbService, router: Router, cookies: CookieService) {
     this.route = route;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.dbService = dbService;
     this.cookies = cookies;
-    this.getUserPlayer(); // Can't use this.userPlayer = this.getUserPlayer because of async.
-    console.log("Begin")
-    console.log(this.userPlayer);
-    this.players = this.getPlayers();
-    console.log(this.players);
-    console.log("End")
+    //this.getUserPlayer();
+    //this.players = this.getPlayers();
   }
 
-  private getUserPlayer(){
+  private getUserPlayer() {
     //let userPlayer : Player; 
     this.userPlayer = new Player("Temp", this.roomCode, 0);
-    let name : string = this.route.snapshot.paramMap.get('userPlayer');
+    let name: string = this.route.snapshot.paramMap.get('userPlayer');
     this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
-      this.userPlayer = player; // Must be set directly inside callback
+      this.userPlayer = player;
       console.log(this.userPlayer);
       console.log(this.cookies.getAll());
     });
   }
 
-  private getPlayers() : Player[] {
-    let playerArray : Player[] = [];
+  private getPlayers(): Player[] {
+    let playerArray: Player[] = [];
     this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
       players.forEach(element => {
-        let player : Player = element as Player;
+        let player: Player = element as Player;
         playerArray.push(player);
       });
     });
@@ -57,7 +54,21 @@ export class MainGameComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.voting.populateBallot(this.players, this.userPlayer, VoteType.UNASSIGNED); // TODO: Remove line after testing.
+    let name: string = this.route.snapshot.paramMap.get('userPlayer');
+    let playerArray: Player[] = [];
+    this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
+      this.userPlayer = new Player("temp", this.roomCode);
+      this.userPlayer.fromJSON(player);
+      this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
+        players.forEach(element => {
+          let player = new Player("temp", this.roomCode);
+          player.fromJSON(element)
+          playerArray.push(player);
+        });
+        this.players = playerArray;
+        this.voting.populateBallot(this.players, this.userPlayer, VoteType.UNASSIGNED); // TODO: Remove line after testing.
+      });
+    });
   }
 
 }
