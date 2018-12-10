@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MafiaDbService } from '../mafia-db.service';
 import { VotingComponent } from '../voting/voting.component';
 import { VoteType } from '../vote-type'
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-main-game',
@@ -17,12 +18,14 @@ export class MainGameComponent implements OnInit {
   private route : ActivatedRoute;
   private players : Player[];
   private dbService : MafiaDbService;
+  private cookies : CookieService;
   @ViewChild(VotingComponent) voting : VotingComponent;
 
-  constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router) { 
+  constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router, cookies : CookieService) { 
     this.route = route;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.dbService = dbService;
+    this.cookies = cookies;
     this.getUserPlayer(); // Can't use this.userPlayer = this.getUserPlayer because of async.
     console.log("Begin")
     console.log(this.userPlayer);
@@ -37,7 +40,8 @@ export class MainGameComponent implements OnInit {
     let name : string = this.route.snapshot.paramMap.get('userPlayer');
     this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
       this.userPlayer = player; // Must be set directly inside callback
-      console.log(this.userPlayer)
+      console.log(this.userPlayer);
+      console.log(this.cookies.getAll());
     });
   }
 

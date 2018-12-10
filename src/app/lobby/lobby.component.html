@@ -11,6 +11,6 @@
   <div class="players col-md-9 col-10">
     <div *ngFor="let player of players;" class="player">{{player.name}}</div>
   </div>
-  <button (click)="startGame()">Start Game</button>
+  <button class="start" (click)="startGame()">Start Game</button>
   <app-message-box [messages]="messages"></app-message-box>
 </div>

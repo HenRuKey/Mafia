@@ -59,6 +59,7 @@ export class RoomManagerComponent implements OnInit {
       if (result == null) {
         this.service.CreateRoom(roomCode, succeed => {
           this.cookies.set("playerHostId", "mxcUdNdK37i11gmhwEpn", 2,  "/room/" + roomCode);
+          this.cookies.set("cookieLoader", "CrYXg9d8iXMTDGFQPwDW", 2,  "/room/" + roomCode);
           this.router.navigate(['/room', roomCode]);
           this.room = roomCode;
           console.log(succeed)
@@ -92,6 +93,7 @@ export class RoomManagerComponent implements OnInit {
       this.service.CheckRoomByID(roomCode, result => {
         if (result != null) {
           this.room = roomCode;
+          this.cookies.set("cookieLoader", "CrYXg9d8iXMTDGFQPwDW", 2,  "/room/" + roomCode);
           this.router.navigate(['/room', this.room]);
         } else {
           $(".error").text("Room Doesn't Exist")

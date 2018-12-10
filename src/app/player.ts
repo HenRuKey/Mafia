@@ -33,7 +33,11 @@ export class Player {
         return this.lastActive;
     }
 
-    set IsAlive(isAlive : boolean) {
+    set Role(role: Role){
+        this.role = role
+    }
+
+    set IsAlive(isAlive: boolean) {
         this.isAlive = isAlive
     }    
 

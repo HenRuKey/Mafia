@@ -25,6 +25,10 @@ body {
     overflow: scroll;
 }
 
+.name-prompt {
+    display: none;
+}
+
 .player {
     background: #369;
     color: #F2F2f2;
@@ -40,6 +44,9 @@ body {
     justify-content: space-around;
     flex-wrap: wrap;
     margin: 0 auto;
+}
+.start {
+    display: none
 }
 
 .room-code {

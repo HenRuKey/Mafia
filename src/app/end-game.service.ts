@@ -19,16 +19,32 @@ export class EndGameService {
     players.forEach(player => {
       if (Date.now() - player.LastActive > this.activeTimeout) {
         player.IsAlive = false;
+        this.service.UpdatePlayer(player,  result => {
+          console.log(result);
+        })
       }
     })
   }
 
   KillSelectedPlayer(player: Player) {
     player.IsAlive = false
+    this.service.UpdatePlayer(player,  result => {
+      console.log(result);
+    })
   }
 
-  IterateGamePhase(){
-    
+  IterateGamePhase(roomCode){
+    this.service.CheckRoomByID(roomCode, result => {
+      var phase = result["phase"];
+      phase ++ 
+      if (phase > 2){
+        phase = 1;
+      }
+      result["phase"] = phase;
+      this.service.UpdateRoomPhase({roomCode: roomCode, phase: phase, lastUsed: Date.now()}, result => {
+        console.log(result);
+      })
+    })
   }
 
   DoesMafiaWin(players: Player[]): boolean {

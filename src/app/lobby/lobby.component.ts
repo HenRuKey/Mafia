@@ -5,7 +5,7 @@ import { Player } from '../player';
 import { CookieService } from 'ngx-cookie-service';
 import { BootstrapOptions } from '@angular/core/src/application_ref';
 import { Role } from '../role';
-import {Phases} from '../phases';
+import { Phases } from '../phases';
 
 @Component({
   selector: 'app-lobby',
@@ -24,6 +24,10 @@ export class LobbyComponent implements OnInit {
   private router: Router;
   private cookies: CookieService;
 
+  private mafiaCount: number;
+  private citizenCount: number;
+  private detectiveCount: number;
+
   /**
    * A lobby to identify present players and begin the game.
    */
@@ -41,6 +45,14 @@ export class LobbyComponent implements OnInit {
     this.refreshLoop();
     this.loopId = setInterval(this.refreshLoop, 4000);
     const joinedRoomCookie: boolean = this.cookies.check("playerId");
+    if(!this.cookies.check("cookieLoader")){
+      location.reload();
+    } else {
+      $(".name-prompt").css("display", "block");
+    }
+    if(this.cookies.check("playerHostId")){
+      $(".start").css("display", "block");
+    }
     this.skipNameEntry(joinedRoomCookie)
   }
 
@@ -57,10 +69,6 @@ export class LobbyComponent implements OnInit {
     console.log(this.players);
   }
 
-  RandomPlayerRole() {
-    var randomRole = Math.floor(Math.random() * 3) + 1;
-    return randomRole;
-  }
 
   /**
    * Adds the player to the lobby.
@@ -70,7 +78,7 @@ export class LobbyComponent implements OnInit {
     if (this.isValidName(name)) {
       $(".error").css("visibility", "hidden"); // Hides the error message if visible
 
-      this.userPlayer = new Player(name, this.roomCode, this.RandomPlayerRole());
+      this.userPlayer = new Player(name, this.roomCode, Role.UNASSIGNED);
       this.dbService.AddPlayerToRoom(this.userPlayer.toJSON(), (result) => {
         this.userPlayer.Id = result["_id"];
         this.cookies.set("playerId", this.userPlayer.Name, 2, "/room/" + this.roomCode);
@@ -100,23 +108,90 @@ export class LobbyComponent implements OnInit {
    * Redirects the player to the main game component.
    */
   startGame() {
-    this.dbService.UpdateRoomPhase({roomCode: this.roomCode, phase: Phases.NIGHT, lastUsed: Date.now()}, result => {
+    var playerCount = this.players.length;
+    this.mafiaCount = 0;
+    this.citizenCount = 0;
+    this.detectiveCount = 0;
+    this.CalculateRoleRatio(playerCount)
+    this.AssignRoles();
+
+
+    this.dbService.UpdateRoomPhase({ roomCode: this.roomCode, phase: Phases.NIGHT, lastUsed: Date.now() }, result => {
       console.log(result);
     })
     clearInterval(this.loopId)
     this.router.navigate(['/game', this.roomCode, this.userPlayer.Name]);
   }
 
+
+  CalculateRoleRatio(playerCount) {
+    for (let i = 0; i < playerCount; i++) {
+      if (this.mafiaCount <= 0) {
+        this.mafiaCount++;
+        continue;
+      }
+      if (this.citizenCount <= 0) {
+        this.citizenCount++
+        continue;
+      }
+      if (this.detectiveCount <= 0) {
+        this.detectiveCount++;
+        continue;
+      }
+      if (playerCount > 15 && this.detectiveCount < 2) {
+        this.detectiveCount++
+        continue;
+      }
+      if (this.mafiaCount < (this.citizenCount / 3)){
+        this.mafiaCount++
+      } else {
+        this.citizenCount++
+      }
+    }
+  }
+
+
+  AssignRoles() {
+    this.players.forEach(player => {
+      player.Role = this.RandomPlayerRole();
+    });
+  }
+
+  RandomPlayerRole() {
+    var bool = true
+    var result;
+    while (bool) {
+      var randomRole = Math.floor(Math.random() * 3) + 1;
+      if (randomRole == Role.MAFIA && this.mafiaCount > 0) {
+        result = Role.MAFIA;
+        this.mafiaCount--;
+        bool = false;
+      } else if (randomRole == Role.CITIZEN && this.citizenCount > 0) {
+        result = Role.CITIZEN;
+        this.citizenCount--;
+        bool = false;
+      } else if (randomRole == Role.DETECTIVE && this.detectiveCount > 0) {
+        result = Role.DETECTIVE;
+        this.detectiveCount--;
+        bool = false;
+      }
+    }
+    return result;
+  }
+
+
+
+
   private refreshLoop = () => {
     this.dbService.GetRoomMessages(this.roomCode, messageEntries => {
       this.messages = messageEntries.filter(
-          message => message.role == undefined || (this.userPlayer != undefined && message.role == this.userPlayer.Role)
+        message => message.role == undefined || (this.userPlayer != undefined && message.role == this.userPlayer.Role)
       );
       this.messages.sort((entry1, entry2) => entry1.timestamp - entry2.timestamp);
     });
     this.getPlayers();
     this.dbService.CheckRoomByID(this.roomCode, result => {
-      if (result["phase"] != Phases.PREGAME){
+      if (result["phase"] != Phases.PREGAME) {
         this.router.navigate(['/game', this.roomCode, this.userPlayer.Name]);
       }
     })
