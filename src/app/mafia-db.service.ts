@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Options } from 'selenium-webdriver/opera';
+import { Phases } from './phases';
 var serv_url = "http://localhost:3000"
 
 @Injectable({
@@ -36,7 +37,7 @@ export class MafiaDbService {
    * @param CallbackFalse function call if room already exists and creation fails
    */
   CreateRoom(roomCode, CallbackTrue, CallbackFalse) {
-    this.http.post(serv_url + '/api/create/' + roomCode, { roomCode: roomCode }).subscribe(result => {
+    this.http.post(serv_url + '/api/create/' + roomCode, { roomCode: roomCode, phase: Phases.PREGAME}).subscribe(result => {
       if (result) {
         CallbackTrue(result);
       } else {
@@ -63,7 +64,7 @@ export class MafiaDbService {
 
 
   UpdateRoomPhase(room, callback) {
-    this.http.put(serv_url + '/api/updateRoom/' + room.code, room).subscribe(result => {
+    this.http.put(serv_url + '/api/updateRoom/' + room.roomCode, room).subscribe(result => {
       callback(result);
     })
   }

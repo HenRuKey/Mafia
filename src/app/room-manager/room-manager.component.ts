@@ -54,13 +54,13 @@ export class RoomManagerComponent implements OnInit {
    */
   createRoom() {
     var pass = false;
-    var code = this.generateRoomCode();
-    this.service.CheckRoomByID(code, result => {
+    var roomCode = this.generateRoomCode();
+    this.service.CheckRoomByID(roomCode, result => {
       if (result == null) {
-        this.service.CreateRoom(code, succeed => {
-          this.cookies.set
-          this.router.navigate(['/room', code]);
-          this.room = code;
+        this.service.CreateRoom(roomCode, succeed => {
+          this.cookies.set("playerHostId", "mxcUdNdK37i11gmhwEpn", 2,  "/room/" + roomCode);
+          this.router.navigate(['/room', roomCode]);
+          this.room = roomCode;
           console.log(succeed)
         },
           fail => {

@@ -100,7 +100,10 @@ export class LobbyComponent implements OnInit {
    * Redirects the player to the main game component.
    */
   startGame() {
-    this.dbService
+    this.dbService.UpdateRoomPhase({roomCode: this.roomCode, phase: Phases.NIGHT, lastUsed: Date.now()}, result => {
+      console.log(result);
+    })
+    clearInterval(this.loopId)
     this.router.navigate(['/game', this.roomCode, this.userPlayer.Name]);
   }
 

@@ -5,7 +5,7 @@ var http = require('http').Server(app);
 var mongojs = require('mongojs');
 var db = mongojs('mongodb://bryan:mafiadb1@ds029267.mlab.com:29267/game_info', ['rooms', 'players', 'messages', 'votes'], { autoReconnect: true });
 var bodyParser = require('body-parser');
-
+var exprationLimit = 86400000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -33,7 +33,7 @@ app.get("/api/room/:code", (req, res) => {
         }
         if (room != null) {
             
-            var oldDate = parseInt(room.created);
+            var oldDate = parseInt(room.lastUsed);
             var newDate = Date.now();
             if (newDate - oldDate >= exprationLimit) {
                 db.rooms.remove(room);
@@ -50,8 +50,9 @@ app.get("/api/room/:code", (req, res) => {
 //Creates a room with a given code.
 app.post("/api/create/:code", (req, res) => {
     var room = {
-        roomCode: req.params.code,
-        created: Date.now()
+        roomCode: req.body.roomCode,
+        phase: req.body.phase,
+        lastUsed: Date.now()
     };
     var id = room.roomCode;
     if (!id) {
@@ -92,6 +93,7 @@ app.delete("/api/deleteRoom/:code", (req, res) => {
 app.put('/api/updateRoom/:roomCode', (req, res) => {
     var query = {roomCode: req.params.roomCode};
     var room = req.body;
+
     db.rooms.update(query, room,  function(err, room){
         if (err) {
             res.status(400);
