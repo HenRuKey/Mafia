@@ -3,9 +3,9 @@ var express = require("express");
 var app = express();
 var http = require('http').Server(app);
 var mongojs = require('mongojs');
-var db = mongojs('mongodb://bryan:mafiadb1@ds029267.mlab.com:29267/game_info', ['rooms', 'players', 'messages'], { autoReconnect: true });
+var db = mongojs('mongodb://bryan:mafiadb1@ds029267.mlab.com:29267/game_info', ['rooms', 'players', 'messages', 'votes'], { autoReconnect: true });
 var bodyParser = require('body-parser');
-var exprationLimit = 86400000;
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -88,6 +88,20 @@ app.delete("/api/deleteRoom/:code", (req, res) => {
 });
 
 
+//updates a room
+app.put('/api/updateRoom/:roomCode', (req, res) => {
+    var query = {roomCode: req.params.roomCode};
+    var room = req.body;
+    db.rooms.update(query, room,  function(err, room){
+        if (err) {
+            res.status(400);
+            res.send(err);
+        }
+        res.json(room);
+    })
+})
+
+
 // Add Player
 app.post("/api/addPlayer", (req, res) => {
     var player = req.body;
@@ -140,6 +154,13 @@ app.put("/api/updatePlayer", (req, res) => {
         role: player.role,
         isAlive: player.isAlive,
         lastActive: Date.now()
+    }, function(err, player){
+        if(err){
+            res.status(400);
+            res.json(err);
+        } else {
+            res.json(player)
+        }
     })
 })
 
@@ -185,6 +206,51 @@ app.get("/api/allMessages/:code", (req, res) => {
     });
 
 });
+
+//add vote
+app.post('/api/addVote', (req, res) => {
+    var vote = req.body;
+    if (!vote) {
+        res.status(400);
+        res.json("Invalid Data");
+    } else {
+        db.votes.save(vote, function (err, vote) {
+            if (err) {
+                res.status(400);
+                res.send(err);
+            }
+            res.json(vote);
+        });
+    }
+})
+
+// get all votes by electionId
+app.get("/api/getVotes/:electionId", (req, res) => {
+    var query = { electionId: req.params.electionId};
+    db.votes.find(query, function(err, votes){
+        if (err) {
+            res.status(400);
+            res.send(err);
+        }
+        res.json(votes);
+    })
+})
+
+
+
+app.put("/api/updateActiveTime", (req, res) => {
+    var query = { _id: mongojs.ObjectId(req.body) };
+    db.players.update(query, { $set: { lastActive : Date.now()  } },
+     function(err, player){
+        if (err) {
+            res.status(400);
+            res.send(err);
+        }
+        res.json(player);
+
+    })
+})
+
 
 
 http.listen(3000, function () {

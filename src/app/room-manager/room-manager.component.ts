@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import * as $ from 'jquery';
 import { MafiaDbService } from '../mafia-db.service';
+import { CookieService } from 'ngx-cookie-service';
 import { getRandomString } from 'selenium-webdriver/safari';
 import { RouterLink, Router } from '@angular/router';
 
@@ -20,10 +21,12 @@ export class RoomManagerComponent implements OnInit {
   private room: string;
   private service: MafiaDbService;
   private router: Router;
+  private cookies: CookieService;
 
-  constructor(service: MafiaDbService, router: Router) {
+  constructor(service: MafiaDbService, router: Router, cookies: CookieService) {
     this.service = service;
     this.router = router;
+    this.cookies = cookies;
   }
 
   ngOnInit() {
@@ -55,6 +58,7 @@ export class RoomManagerComponent implements OnInit {
     this.service.CheckRoomByID(code, result => {
       if (result == null) {
         this.service.CreateRoom(code, succeed => {
+          this.cookies.set
           this.router.navigate(['/room', code]);
           this.room = code;
           console.log(succeed)
