@@ -33,11 +33,12 @@ export class Player {
         return this.lastActive;
     }
 
-    set IsAlive(isAlive: boolean) {
+    set IsAlive(isAlive : boolean) {
         this.isAlive = isAlive
     }    
 
-    set Id(id : string){
+    set Id(id : string) {
+
         this.id = id;
     }
     
@@ -53,11 +54,11 @@ export class Player {
 
     toJSON() : PlayerJSON {
         return Object.assign({}, this, {
-            name: this.name,
-            role: this.role,
-            isAlive: this.isAlive,
-            roomCode: this.roomCode,
-            lastActive: this.lastActive
+            name: this.Name,
+            role: this.Role,
+            isAlive: this.IsAlive,
+            roomCode: this.RoomCode,
+            lastActive: this.LastActive
         });
     }
 
