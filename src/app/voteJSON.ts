@@ -2,7 +2,7 @@ import { Player } from "./player";
 import { VoteType } from "./vote-type";
 
 export interface VoteJSON {
-    electionId : number;
+    electionId : string;
     voter : Player;
     recipient : Player;
     voteType : VoteType;
