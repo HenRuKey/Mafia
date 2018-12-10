@@ -6,6 +6,7 @@ import { VotingComponent } from '../voting/voting.component';
 import { VoteType } from '../vote-type'
 import { CookieService } from 'ngx-cookie-service';
 import { promise } from 'protractor';
+import { Role } from '../role';
 
 @Component({
   selector: 'app-main-game',
@@ -20,6 +21,7 @@ export class MainGameComponent implements OnInit {
   private players: Player[];
   private dbService: MafiaDbService;
   private cookies: CookieService;
+  private role;
   @ViewChild(VotingComponent) voting: VotingComponent;
 
   constructor(route: ActivatedRoute, dbService: MafiaDbService, router: Router, cookies: CookieService) {
@@ -31,27 +33,27 @@ export class MainGameComponent implements OnInit {
     //this.players = this.getPlayers();
   }
 
-  private getUserPlayer() {
-    //let userPlayer : Player; 
-    this.userPlayer = new Player("Temp", this.roomCode, 0);
-    let name: string = this.route.snapshot.paramMap.get('userPlayer');
-    this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
-      this.userPlayer = player;
-      console.log(this.userPlayer);
-      console.log(this.cookies.getAll());
-    });
-  }
+  // private getUserPlayer() {
+  //   //let userPlayer : Player; 
+  //   this.userPlayer = new Player("Temp", this.roomCode, 0);
+  //   let name: string = this.route.snapshot.paramMap.get('userPlayer');
+  //   this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
+  //     this.userPlayer = player;
+  //     console.log(this.userPlayer);
+  //     console.log(this.cookies.getAll());
+  //   });
+  // }
 
-  private getPlayers(): Player[] {
-    let playerArray: Player[] = [];
-    this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
-      players.forEach(element => {
-        let player: Player = element as Player;
-        playerArray.push(player);
-      });
-    });
-    return playerArray;
-  }
+  // private getPlayers(): Player[] {
+  //   let playerArray: Player[] = [];
+  //   this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
+  //     players.forEach(element => {
+  //       let player: Player = element as Player;
+  //       playerArray.push(player);
+  //     });
+  //   });
+  //   return playerArray;
+  // }
 
   ngOnInit() {
     let name: string = this.route.snapshot.paramMap.get('userPlayer');
@@ -59,6 +61,7 @@ export class MainGameComponent implements OnInit {
     this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
       this.userPlayer = new Player("temp", this.roomCode);
       this.userPlayer.fromJSON(player);
+      this.role = Role[this.userPlayer.Role]
       this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
         players.forEach(element => {
           let player = new Player("temp", this.roomCode);
@@ -70,5 +73,13 @@ export class MainGameComponent implements OnInit {
       });
     });
   }
+
+
+
+  
+
+
+
+
 
 }

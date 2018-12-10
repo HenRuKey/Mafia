@@ -149,6 +149,8 @@ app.get("/api/allPlayers/:code", (req, res) => {
 
 //Updates a player
 app.put("/api/updatePlayer", (req, res) => {
+    var player = req.body
+    console.log(player.id)
     var query = { _id: mongojs.ObjectId(player.id) };
     db.players.update(query, {
         name: player.name,
@@ -158,9 +160,13 @@ app.put("/api/updatePlayer", (req, res) => {
         lastActive: Date.now()
     }, function(err, player){
         if(err){
+            console.log("Error")
+            console.log(err)
             res.status(400);
             res.json(err);
         } else {
+            console.log("No Error")
+            console.log(player)
             res.json(player)
         }
     })
