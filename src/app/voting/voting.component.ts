@@ -54,10 +54,6 @@ export class VotingComponent implements OnInit {
         message = "Select a player to accuse.";
         break;
       }
-      case VoteType.LYNCH: {
-        message = "Guilty or Not Guilty?";
-        break;
-      }
       default: {
         message = "";
         break;
