@@ -5,10 +5,11 @@
     </div>
     <div class="rm-section right" id="right">
         <div class="right-wrapper">
-            <a class="button" (click)="showRoomCodePrompt()">Join Room</a>
+            <a class="button" (click)="showRoomCodePrompt()"
+                    onclick="setTimeout(() => {document.getElementById('roomCode').focus();}, 0);">Join Room</a>
             <div class="room-code-entry" id="room_entry">
                 <form (submit)="joinRoom(roomCode.value)">
-                    <input type="text" #roomCode/>
+                    <input type="text" id="roomCode" #roomCode/>
                     <input type="submit" value="Join"/>
                     <label class="error">Invalid room code.</label>
                 </form>
