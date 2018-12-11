@@ -160,13 +160,9 @@ app.put("/api/updatePlayer", (req, res) => {
         lastActive: Date.now()
     }, function(err, player){
         if(err){
-            console.log("Error")
-            console.log(err)
             res.status(400);
             res.json(err);
         } else {
-            console.log("No Error")
-            console.log(player)
             res.json(player)
         }
     })

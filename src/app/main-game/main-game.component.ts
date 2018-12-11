@@ -76,6 +76,7 @@ export class MainGameComponent implements OnInit {
               var vote = new Vote("", VoteType.UNASSIGNED, null, null)
               vote.fromJSON(element)
               votes.push(vote)
+              console.log(votes)
             });
             this.logic.KillInactivePlayers(this.players);
             if (this.logic.DoesMafiaWin(this.players)) {
