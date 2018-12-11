@@ -75,7 +75,7 @@ export class MainGameComponent implements OnInit {
     });
   }
   
-    private refreshLoop = () => {
+  private refreshLoop = () => {
     this.dbService.GetRoomMessages(this.roomCode, messageEntries => {
       this.messages = messageEntries.filter(message => {
           if (message.role != undefined) {
