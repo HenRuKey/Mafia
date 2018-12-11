@@ -27,7 +27,7 @@ export class MainGameComponent implements OnInit {
   private role : string;
   private loopId : any;
   private messages : any;
-  private logic: EndGameService;
+  private logic : EndGameService;
   @ViewChild(VotingComponent) voting: VotingComponent;
 
   constructor(route: ActivatedRoute, dbService: MafiaDbService, router: Router, cookies: CookieService, endLogic: EndGameService) {
@@ -80,27 +80,37 @@ export class MainGameComponent implements OnInit {
             this.logic.KillInactivePlayers(this.players);
             if (this.logic.DoesMafiaWin(this.players)) {
               console.log("Mafia Wins after inactive kill")
+              this.displayWinMessage(Role[Role.MAFIA]);
               //Mafia Wins-- Do Something
             } else if (this.logic.DoesCitizensWin(this.players)) {
               console.log("Citizens Win after inactive kill")
+              this.displayWinMessage(Role[Role.CITIZEN]);
               //Citizens Win-- Do Something
             } else {
               var killedPlayer = this.logic.CountVotes(votes, this.players)
               this.logic.KillSelectedPlayer(killedPlayer)
               if (this.logic.DoesMafiaWin(this.players)) {
                 console.log("Mafia Wins after vote")
+                this.displayWinMessage(Role[Role.MAFIA]);
                 //Mafia Wins-- Do Something
               } else if (this.logic.DoesCitizensWin(this.players)) {
                 console.log("Citizens Win after vote")
+                this.displayWinMessage(Role[Role.CITIZEN]);
                 //Citizens Win-- Do Something
               }
             }
             this.logic.IterateGamePhase(this.roomCode)
         })
-
       })
-
     })
+  }
+
+  displayWinMessage(winningRole : string) {
+    this.dbService.AddMessage({
+      "text": `${ winningRole } wins.`,
+      "roomCode": `${ this.roomCode }`,
+      "timestamp": Date.now()
+    }, () => {});
   }
 
   /**
@@ -112,7 +122,7 @@ export class MainGameComponent implements OnInit {
       this.dbService.CheckRoomByID(this.roomCode, (room) => {
         this.dbService.AddVote(new Vote(`${ this.roomCode }${ room['phase'] }`, VoteType.MAFIA, this.userPlayer, selectedPlayer), () => {
           this.dbService.AddMessage({
-            "text": `You have voted against ${ selectedPlayer.Name }.`,
+            "text": `You have voted against ${ selectedPlayer.name }.`,
             "roomCode": this.roomCode,
             "timestamp": Date.now(),
             "playerId": this.userPlayer.Id
