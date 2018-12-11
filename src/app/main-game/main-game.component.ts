@@ -27,7 +27,7 @@ export class MainGameComponent implements OnInit {
   private role : string;
   private loopId : any;
   private messages : any;
-  private logic: EndGameService;
+  private logic : EndGameService;
   @ViewChild(VotingComponent) voting: VotingComponent;
 
   constructor(route: ActivatedRoute, dbService: MafiaDbService, router: Router, cookies: CookieService, endLogic: EndGameService) {
@@ -62,7 +62,7 @@ export class MainGameComponent implements OnInit {
 
   startNextPhase() {
     let playerArray: Player[] = [];
-    let votes: Vote[]
+    let votes: Vote[] = [];
     this.dbService.GetAllPlayersInRoom(this.roomCode, players => {
       players.forEach(element => {
         let player = new Player("temp", this.roomCode);
@@ -79,28 +79,34 @@ export class MainGameComponent implements OnInit {
             });
             this.logic.KillInactivePlayers(this.players);
             if (this.logic.DoesMafiaWin) {
-              console.log("Mafia Wins")
+              this.displayWinMessage(Role[Role.MAFIA]);
               //Mafia Wins-- Do Something
             } else if (this.logic.DoesCitizensWin) {
-              console.log("Citizens Win")
+              this.displayWinMessage(Role[Role.CITIZEN]);
               //Citizens Win-- Do Something
             } else {
               var killedPlayer = this.logic.CountVotes(votes, this.players)
               this.logic.KillSelectedPlayer(killedPlayer)
               if (this.logic.DoesMafiaWin) {
-                console.log("Mafia Wins")
+                this.displayWinMessage(Role[Role.MAFIA]);
                 //Mafia Wins-- Do Something
               } else if (this.logic.DoesCitizensWin) {
-                console.log("Citizens Win")
+                this.displayWinMessage(Role[Role.CITIZEN]);
                 //Citizens Win-- Do Something
               }
             }
             this.logic.IterateGamePhase(this.roomCode)
         })
-
       })
-
     })
+  }
+
+  displayWinMessage(winningRole : string) {
+    this.dbService.AddMessage({
+      "text": `${ winningRole } wins.`,
+      "roomCode": `${ this.roomCode }`,
+      "timestamp": Date.now()
+    }, () => {});
   }
 
   /**
