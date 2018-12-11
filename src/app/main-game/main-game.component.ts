@@ -9,6 +9,7 @@ import { promise } from 'protractor';
 import { Role } from '../role';
 import { Vote } from '../vote';
 import { Phases } from '../phases';
+import { EndGameService } from '../end-game.service';
 
 @Component({
   selector: 'app-main-game',
@@ -26,13 +27,15 @@ export class MainGameComponent implements OnInit {
   private role : string;
   private loopId : any;
   private messages : any;
+  private logic: EndGameService;
   @ViewChild(VotingComponent) voting: VotingComponent;
 
-  constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router, cookies : CookieService) {
+  constructor(route: ActivatedRoute, dbService: MafiaDbService, router: Router, cookies: CookieService, endLogic: EndGameService) {
     this.route = route;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.dbService = dbService;
     this.cookies = cookies;
+    this.logic = endLogic;
   }
 
   ngOnInit() {
@@ -54,6 +57,50 @@ export class MainGameComponent implements OnInit {
         this.voting.populateBallot(this.players, this.userPlayer, VoteType.MAFIA, this.submitVote); // TODO: Remove line after testing.
       });
     });
+  }
+
+
+  startNextPhase() {
+    let playerArray: Player[] = [];
+    let votes: Vote[]
+    this.dbService.GetAllPlayersInRoom(this.roomCode, players => {
+      players.forEach(element => {
+        let player = new Player("temp", this.roomCode);
+        player.fromJSON(element)
+        playerArray.push(player);
+      })
+      this.players = playerArray;
+      this.dbService.CheckRoomByID(this.roomCode, room => {
+        this.dbService.GetVotesByElectionId(`${this.roomCode}${room['phase']}`, result => {
+            result.forEach(element => {
+              var vote = new Vote("", VoteType.UNASSIGNED, null, null)
+              vote.fromJSON(element)
+              votes.push(vote)
+            });
+            this.logic.KillInactivePlayers(this.players);
+            if (this.logic.DoesMafiaWin) {
+              console.log("Mafia Wins")
+              //Mafia Wins-- Do Something
+            } else if (this.logic.DoesCitizensWin) {
+              console.log("Citizens Win")
+              //Citizens Win-- Do Something
+            } else {
+              var killedPlayer = this.logic.CountVotes(votes, this.players)
+              this.logic.KillSelectedPlayer(killedPlayer)
+              if (this.logic.DoesMafiaWin) {
+                console.log("Mafia Wins")
+                //Mafia Wins-- Do Something
+              } else if (this.logic.DoesCitizensWin) {
+                console.log("Citizens Win")
+                //Citizens Win-- Do Something
+              }
+            }
+            this.logic.IterateGamePhase(this.roomCode)
+        })
+
+      })
+
+    })
   }
 
   /**
