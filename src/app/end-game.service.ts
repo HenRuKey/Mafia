@@ -3,6 +3,7 @@ import { Player } from './player';
 import { Role } from './role';
 import { MafiaDbService } from './mafia-db.service';
 import { Vote } from './vote';
+import { debug } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -29,17 +30,17 @@ export class EndGameService {
   CountVotes(votes: Vote[], players: Player[]) : Player {
     let playerMap = {};
     players.forEach(player => {
-      playerMap[player.Id] = 0;
+      playerMap[player.Name] = 0;
     });
     votes.forEach(vote => {
-      let recipientId : string = vote.Recipient.Id;
-      playerMap[recipientId] += 1;
+      let recipientName : string = vote.Recipient.Name;
+      playerMap[recipientName] += 1;
     });
     let maxPlayer : Player;
     let voteNum : number = 0;
     players.forEach(player => {
-      if (playerMap[player.Id] > voteNum) {
-        voteNum = playerMap[player.Id];
+      if (playerMap[player.Name] > voteNum) {
+        voteNum = playerMap[player.Name];
         maxPlayer = player;
       }
     });
