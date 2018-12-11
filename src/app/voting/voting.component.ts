@@ -22,10 +22,10 @@ export class VotingComponent implements OnInit {
    * @param voteType The type of vote to hold.
    */
   populateBallot(players : Player[], userPlayer : Player, voteType: VoteType, callback : any) {
+    $(".vote").css("visibility", "visible");
     if ($(".player-buttons").children.length > 0) {
       $(".player-buttons").empty();
     }
-    console.log(players);
     players.forEach(player => {
       if (player.Id != userPlayer.Id && player.IsAlive) {
         $(".player-buttons").append(`
@@ -35,6 +35,7 @@ export class VotingComponent implements OnInit {
     });
     $(".submit-vote").click(() => {
       let playerName : any = $("input[name='player']:checked").val();
+      $(".vote").css("visibility", "hidden");
       callback(playerName);
     });
   }
