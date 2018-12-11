@@ -62,7 +62,7 @@ export class MainGameComponent implements OnInit {
 
   startNextPhase() {
     let playerArray: Player[] = [];
-    let votes: Vote[]
+    let votes: Vote[] = [];
     this.dbService.GetAllPlayersInRoom(this.roomCode, players => {
       players.forEach(element => {
         let player = new Player("temp", this.roomCode);
@@ -78,20 +78,20 @@ export class MainGameComponent implements OnInit {
               votes.push(vote)
             });
             this.logic.KillInactivePlayers(this.players);
-            if (this.logic.DoesMafiaWin) {
-              console.log("Mafia Wins")
+            if (this.logic.DoesMafiaWin(this.players)) {
+              console.log("Mafia Wins after inactive kill")
               //Mafia Wins-- Do Something
-            } else if (this.logic.DoesCitizensWin) {
-              console.log("Citizens Win")
+            } else if (this.logic.DoesCitizensWin(this.players)) {
+              console.log("Citizens Win after inactive kill")
               //Citizens Win-- Do Something
             } else {
               var killedPlayer = this.logic.CountVotes(votes, this.players)
               this.logic.KillSelectedPlayer(killedPlayer)
-              if (this.logic.DoesMafiaWin) {
-                console.log("Mafia Wins")
+              if (this.logic.DoesMafiaWin(this.players)) {
+                console.log("Mafia Wins after vote")
                 //Mafia Wins-- Do Something
-              } else if (this.logic.DoesCitizensWin) {
-                console.log("Citizens Win")
+              } else if (this.logic.DoesCitizensWin(this.players)) {
+                console.log("Citizens Win after vote")
                 //Citizens Win-- Do Something
               }
             }

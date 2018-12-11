@@ -177,7 +177,7 @@ export class MafiaDbService {
    * @param callback function called on completion
    */
   GetVotesByElectionId(electionId, callback, IdCookie = undefined){
-    this.http.get('/api/getVotes/' + electionId).subscribe(result => {
+    this.http.get(serv_url + '/api/getVotes/' + electionId).subscribe(result => {
       callback(result);
     })
 

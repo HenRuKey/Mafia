@@ -61,6 +61,7 @@ export class EndGameService {
   }
 
   DoesMafiaWin(players: Player[]): boolean {
+    debugger;
     var mafiaCount = 0;
     var otherCount = 0;
     players.forEach(player => {
