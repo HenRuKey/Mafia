@@ -65,7 +65,7 @@ export class MainGameComponent implements OnInit {
       this.dbService.CheckRoomByID(this.roomCode, (room) => {
         this.dbService.AddVote(new Vote(`${ this.roomCode }${ room['phase'] }`, VoteType.MAFIA, this.userPlayer, selectedPlayer), () => {
           this.dbService.AddMessage({
-            "text": `You have voted against ${ selectedPlayer.Name }.`,
+            "text": `You have voted against ${ selectedPlayer.name }.`,
             "roomCode": this.roomCode,
             "timestamp": Date.now(),
             "playerId": this.userPlayer.Id
