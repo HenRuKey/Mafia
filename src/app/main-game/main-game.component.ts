@@ -34,6 +34,8 @@ export class MainGameComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.refreshLoop();
+    this.loopId = setInterval(this.refreshLoop, 4000);
     let name: string = this.route.snapshot.paramMap.get('userPlayer');
     let playerArray: Player[] = [];
     this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
@@ -68,6 +70,34 @@ export class MainGameComponent implements OnInit {
           }, () => {});
         }, this.cookies.check('playerId'));
       });
+    });
+  }
+  
+    private refreshLoop = () => {
+    this.dbService.GetRoomMessages(this.roomCode, messageEntries => {
+      this.messages = messageEntries.filter(message => {
+          if (message.role != undefined) {
+            if (this.userPlayer != undefined) {
+              if (message.playerId != undefined) {
+                return message.role == Role[this.userPlayer.Role] && message.playerId == this.userPlayer.Id;
+              } else {
+                return message.role == Role[this.userPlayer.Role];
+              }
+            } else {
+              return false;
+            }
+          } else if (message.playerId != undefined) {
+            if (this.userPlayer != undefined) {
+              return message.playerId == this.userPlayer.Id;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        }
+      );
+      this.messages.sort((entry1, entry2) => entry1.timestamp - entry2.timestamp);
     });
   }
 
