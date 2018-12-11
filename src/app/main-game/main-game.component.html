@@ -5,5 +5,5 @@
     <h2 class="role">{{ role }}</h2>
     <button (click)="startNextPhase()">Start Next Phase</button>
     <app-voting></app-voting>
-    <app-message-box></app-message-box>
+    <app-message-box [messages]="messages"></app-message-box>
 </div>

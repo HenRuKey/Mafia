@@ -194,9 +194,9 @@ export class LobbyComponent implements OnInit {
           if (message.role != undefined) {
             if (this.userPlayer != undefined) {
               if (message.playerId != undefined) {
-                return message.role == this.userPlayer.Role && message.playerId == this.userPlayer.Id;
+                return message.role == Role[this.userPlayer.Role] && message.playerId == this.userPlayer.Id;
               } else {
-                return message.role == this.userPlayer.Role;
+                return message.role == Role[this.userPlayer.Role];
               }
             } else {
               return false;
@@ -211,8 +211,6 @@ export class LobbyComponent implements OnInit {
             return true;
           }
         }
-        //(message.role == undefined && message.playerId == undefined) ||
-        //(this.userPlayer != undefined && (message.role == this.userPlayer.Role || message.playerId == this.userPlayer.id))
       );
       this.messages.sort((entry1, entry2) => entry1.timestamp - entry2.timestamp);
     });
