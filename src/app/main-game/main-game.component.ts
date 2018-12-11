@@ -52,10 +52,21 @@ export class MainGameComponent implements OnInit {
     });
   }
 
+  /**
+   * Submits a vote against a given player.
+   * @param playerName The name of the player to vote against.
+   */
   submitVote = (playerName : string) => {
     this.dbService.GetPlayerByRoom(this.roomCode, playerName, (selectedPlayer) => {
       this.dbService.CheckRoomByID(this.roomCode, (room) => {
-        this.dbService.AddVote(new Vote(`${ this.roomCode }${ room['phase'] }`, VoteType.MAFIA, this.userPlayer, selectedPlayer), () => {}, this.cookies.check('playerId'));
+        this.dbService.AddVote(new Vote(`${ this.roomCode }${ room['phase'] }`, VoteType.MAFIA, this.userPlayer, selectedPlayer), () => {
+          this.dbService.AddMessage({
+            "text": `You have voted against ${ selectedPlayer.Name }.`,
+            "roomCode": this.roomCode,
+            "timestamp": Date.now(),
+            "playerId": this.userPlayer.Id
+          }, () => {});
+        }, this.cookies.check('playerId'));
       });
     });
   }
