@@ -184,8 +184,29 @@ export class LobbyComponent implements OnInit {
 
   private refreshLoop = () => {
     this.dbService.GetRoomMessages(this.roomCode, messageEntries => {
-      this.messages = messageEntries.filter(
-        message => message.role == undefined || (this.userPlayer != undefined && message.role == this.userPlayer.Role)
+      this.messages = messageEntries.filter(message => {
+          if (message.role != undefined) {
+            if (this.userPlayer != undefined) {
+              if (message.playerId != undefined) {
+                return message.role == this.userPlayer.Role && message.playerId == this.userPlayer.Id;
+              } else {
+                return message.role == this.userPlayer.Role;
+              }
+            } else {
+              return false;
+            }
+          } else if (message.playerId != undefined) {
+            if (this.userPlayer != undefined) {
+              return message.playerId == this.userPlayer.Id;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        }
+        //(message.role == undefined && message.playerId == undefined) ||
+        //(this.userPlayer != undefined && (message.role == this.userPlayer.Role || message.playerId == this.userPlayer.id))
       );
       this.messages.sort((entry1, entry2) => entry1.timestamp - entry2.timestamp);
     });
