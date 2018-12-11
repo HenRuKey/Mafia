@@ -17,16 +17,16 @@ import { Phases } from '../phases';
 })
 export class MainGameComponent implements OnInit {
 
-  private userPlayer: Player;
-  private roomCode: string;
-  private route: ActivatedRoute;
-  private players: Player[];
-  private dbService: MafiaDbService;
-  private cookies: CookieService;
-  private role;
+  private userPlayer : Player;
+  private roomCode : string;
+  private route : ActivatedRoute;
+  private players : Player[];
+  private dbService : MafiaDbService;
+  private cookies : CookieService;
+  private role : string;
   @ViewChild(VotingComponent) voting: VotingComponent;
 
-  constructor(route: ActivatedRoute, dbService: MafiaDbService, router: Router, cookies: CookieService) {
+  constructor(route : ActivatedRoute, dbService : MafiaDbService, router : Router, cookies : CookieService) {
     this.route = route;
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.dbService = dbService;
@@ -34,20 +34,20 @@ export class MainGameComponent implements OnInit {
   }
 
   ngOnInit() {
-    let name: string = this.route.snapshot.paramMap.get('userPlayer');
+    let name : string = this.route.snapshot.paramMap.get('userPlayer');
     let playerArray: Player[] = [];
     this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
       this.userPlayer = new Player("temp", this.roomCode);
       this.userPlayer.fromJSON(player);
-      this.role = Role[this.userPlayer.Role]
+      this.role = Role[this.userPlayer.Role];
       this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
         players.forEach(element => {
-          let player = new Player("temp", this.roomCode);
+          let player : Player = new Player("temp", this.roomCode);
           player.fromJSON(element)
           playerArray.push(player);
         });
         this.players = playerArray;
-        this.voting.populateBallot(this.players, this.userPlayer, VoteType.UNASSIGNED, this.submitVote); // TODO: Remove line after testing.
+        this.voting.populateBallot(this.players, this.userPlayer, VoteType.MAFIA, this.submitVote); // TODO: Remove line after testing.
       });
     });
   }
