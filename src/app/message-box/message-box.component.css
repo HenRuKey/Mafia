@@ -1,4 +1,4 @@
-.message-box {
+#message-box {
   border: 1px solid black;
   padding: 5px;
   overflow: auto;
