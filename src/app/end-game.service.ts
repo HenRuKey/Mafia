@@ -26,17 +26,24 @@ export class EndGameService {
     })
   }
 
-  CountVotes(votes: Vote[], players: Player[]) : Player{
-    var results = [];
+  CountVotes(votes: Vote[], players: Player[]) : Player {
+    let playerMap = {};
     players.forEach(player => {
-      var count = votes.filter((vote) => vote.Recipient === player).length
-      results.push({playerName: player.Name, voteCount: count})
+      playerMap[player.Id] = 0;
     });
-
-    var highest = results.reduce((max, v) => v.voteCount > max ? v.voteCount : max, results[0].voteCount);
-    var selected = results.find(c => c.voteCount === highest)
-    return players.find(p => p.Name == selected.playerName);
-    
+    votes.forEach(vote => {
+      let recipientId : string = vote.Recipient.Id;
+      playerMap[recipientId] += 1;
+    });
+    let maxPlayer : Player;
+    let voteNum : number = 0;
+    players.forEach(player => {
+      if (playerMap[player.Id] > voteNum) {
+        voteNum = playerMap[player.Id];
+        maxPlayer = player;
+      }
+    });
+    return maxPlayer;
   }
 
   KillSelectedPlayer(player: Player) {
