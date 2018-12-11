@@ -6,6 +6,9 @@ import { VotingComponent } from '../voting/voting.component';
 import { VoteType } from '../vote-type'
 import { CookieService } from 'ngx-cookie-service';
 import { promise } from 'protractor';
+import { Role } from '../role';
+import { Vote } from '../vote';
+import { Phases } from '../phases';
 
 @Component({
   selector: 'app-main-game',
@@ -20,6 +23,7 @@ export class MainGameComponent implements OnInit {
   private players: Player[];
   private dbService: MafiaDbService;
   private cookies: CookieService;
+  private role;
   @ViewChild(VotingComponent) voting: VotingComponent;
 
   constructor(route: ActivatedRoute, dbService: MafiaDbService, router: Router, cookies: CookieService) {
@@ -27,30 +31,6 @@ export class MainGameComponent implements OnInit {
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     this.dbService = dbService;
     this.cookies = cookies;
-    //this.getUserPlayer();
-    //this.players = this.getPlayers();
-  }
-
-  private getUserPlayer() {
-    //let userPlayer : Player; 
-    this.userPlayer = new Player("Temp", this.roomCode, 0);
-    let name: string = this.route.snapshot.paramMap.get('userPlayer');
-    this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
-      this.userPlayer = player;
-      console.log(this.userPlayer);
-      console.log(this.cookies.getAll());
-    });
-  }
-
-  private getPlayers(): Player[] {
-    let playerArray: Player[] = [];
-    this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
-      players.forEach(element => {
-        let player: Player = element as Player;
-        playerArray.push(player);
-      });
-    });
-    return playerArray;
   }
 
   ngOnInit() {
@@ -59,6 +39,7 @@ export class MainGameComponent implements OnInit {
     this.dbService.GetPlayerByRoom(this.roomCode, name, (player) => {
       this.userPlayer = new Player("temp", this.roomCode);
       this.userPlayer.fromJSON(player);
+      this.role = Role[this.userPlayer.Role]
       this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
         players.forEach(element => {
           let player = new Player("temp", this.roomCode);
@@ -66,7 +47,26 @@ export class MainGameComponent implements OnInit {
           playerArray.push(player);
         });
         this.players = playerArray;
-        this.voting.populateBallot(this.players, this.userPlayer, VoteType.UNASSIGNED); // TODO: Remove line after testing.
+        this.voting.populateBallot(this.players, this.userPlayer, VoteType.UNASSIGNED, this.submitVote); // TODO: Remove line after testing.
+      });
+    });
+  }
+
+  /**
+   * Submits a vote against a given player.
+   * @param playerName The name of the player to vote against.
+   */
+  submitVote = (playerName : string) => {
+    this.dbService.GetPlayerByRoom(this.roomCode, playerName, (selectedPlayer) => {
+      this.dbService.CheckRoomByID(this.roomCode, (room) => {
+        this.dbService.AddVote(new Vote(`${ this.roomCode }${ room['phase'] }`, VoteType.MAFIA, this.userPlayer, selectedPlayer), () => {
+          this.dbService.AddMessage({
+            "text": `You have voted against ${ selectedPlayer.Name }.`,
+            "roomCode": this.roomCode,
+            "timestamp": Date.now(),
+            "playerId": this.userPlayer.Id
+          }, () => {});
+        }, this.cookies.check('playerId'));
       });
     });
   }

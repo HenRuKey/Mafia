@@ -63,7 +63,9 @@ export class LobbyComponent implements OnInit {
     this.dbService.GetAllPlayersInRoom(this.roomCode, (players) => {
       this.players = [];
       for (let player of players) {
-        this.players.push(new Player(player["name"], player["roomCode"]));
+        var newPlayer = new Player("temp", this.roomCode);
+        newPlayer.fromJSON(player)
+        this.players.push(newPlayer);
       }
     });
     console.log(this.players);
@@ -154,6 +156,10 @@ export class LobbyComponent implements OnInit {
   AssignRoles() {
     this.players.forEach(player => {
       player.Role = this.RandomPlayerRole();
+      console.log(player.Role);
+      this.dbService.UpdatePlayer(player, result => {
+        console.log(result)
+      })
     });
   }
 
